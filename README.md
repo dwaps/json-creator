@@ -25,7 +25,7 @@ OU BIEN,
 PUIS :
 
 * `cd json-creator`
-* `npm i && bower i`
+* `ionic setup sass && bower i`
 * `ionic platform add android` (ou `ionic serve` pour tester sur navigateur)
 * `ionic run android`
 
