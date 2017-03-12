@@ -52,16 +52,6 @@ function runner($ionicPlatform, $rootScope)
             StatusBar.styleDefault();
         }
 
-        $rootScope.json = "";
-        $rootScope.type = {
-            ARRAY: "tab",
-            OBJECT: "obj",
-            STRING: "str",
-            INTEGER: "nb",
-            BOOLEAN: "y/n",
-
-            PROPRIETE: "Propriété",
-            VALEUR: "Valeur"
-        };
+        $rootScope.json = null;
     });
 }

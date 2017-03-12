@@ -14,6 +14,17 @@ angular
 
 function homeCtrl($scope, $rootScope, dwapsLog)
 {
+    $rootScope.type = {
+        ARRAY: "tab",
+        OBJECT: "obj",
+        STRING: "str",
+        INTEGER: "nb",
+        BOOLEAN: "y/n",
+
+        PROPRIETE: "Propriété",
+        VALEUR: "Valeur"
+    };
+
 	$scope.dataType = $rootScope.type.PROPRIETE;
 	$scope.currentType = "";
 	$scope.currentProp = "";
@@ -42,8 +53,8 @@ function homeCtrl($scope, $rootScope, dwapsLog)
         	{
         		// Mise à jour du type de la valeur à venir : (array, boolean...)
         		$scope.currentType = type;
-        		$scope.currentProp = data;
-        		tmp = '{"'+data+'":""}';
+        		$scope.currentProp = data.toLowerCase();
+        		tmp = '{"'+$scope.currentProp+'":""}';
         		var toJson = JSON.parse(tmp);
 				if(isRootArray) $rootScope.json.push(toJson);
 				else $rootScope.json = toJson;
