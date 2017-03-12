@@ -1,0 +1,71 @@
+<ion-view>
+	<ion-content>
+		
+		<!-- CHOIX RACINE TABLEAU / OBJET -->
+		<div class="button-bar" ng-if="jsonStart">
+			<a
+				class="button button-full button-assertive"
+				ng-click="setTypeAndData( null, true )">
+				[]
+			</a>
+			<a
+				class="button button-full button-royal"
+				ng-click="setTypeAndData( null, false )">
+				{}
+			</a>
+		</div>
+		
+		<div class="card" ng-if="!jsonStart">
+			<!-- NOM PROPRIETE | VALEUR -->
+			<div class="list list-inset">
+				<div class="item item-input">
+					<input
+						type="text"
+						ng-model="dataInput"
+						ng-focus="dataInput=''"
+						placeholder="{{ dataType }}">
+					<button
+						class="button button-assertive"
+						ng-if="dataType==type.VALEUR"
+						ng-click="setTypeAndData( dataInput )">
+						OK
+					</button>
+				</div>
+			</div>
+			
+			<!-- TYPE VALEUR -->
+			<div class="list list-inset" ng-if="dataType==type.PROPRIETE">
+				<div class="item item-input">
+					<div class="button-bar">
+						<a
+							ng-click="setTypeAndData( dataInput, type.ARRAY )"
+							class="button button-positive">
+							[]
+						</a>
+						<a
+							ng-click="setTypeAndData( dataInput, type.OBJECT )"
+							class="button button-royal">
+							{}
+						</a>
+						<a
+							ng-click="setTypeAndData( dataInput, type.STRING )"
+							class="button button-energized">
+							""
+						</a>
+						<a
+							ng-click="setTypeAndData( dataInput, type.INTEGER )"
+							class="button button-balanced">
+							123
+						</a>
+						<a
+							ng-click="setTypeAndData( dataInput, type.BOOLEAN )"
+							class="button button-assertive">
+							bool
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</ion-content>
+</ion-view>
