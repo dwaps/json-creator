@@ -54,10 +54,21 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
         		// Mise à jour du type de la valeur à venir : (array, boolean...)
         		$scope.currentType = type;
         		$scope.currentProp = $filter("slugify")(data, data);
+
         		tmp = '{"'+$scope.currentProp+'":""}';
         		var toJson = JSON.parse(tmp);
+        		
 				if(isRootArray) $rootScope.json.push(toJson);
-				else $rootScope.json = toJson;
+				else
+				{
+					if(Object.keys($rootScope.json).length === 0)
+						$rootScope.json = toJson;
+					else
+						$rootScope.json[$scope.currentProp] = "";
+				}
+				// else
+				// 	if($rootScope.json == {}) $rootScope.json = toJson;
+				// 	else $rootScope.json += toJson;
     			$scope.dataType = $rootScope.type.VALEUR; // Prochaine donnée => valeur
         	}
 
@@ -76,13 +87,21 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 	        				$rootScope.json.forEach(
 	        					function( o )
 	        					{
-        							for( p in o )
+        							for(var p in o )
         							{
         								if( p == $scope.currentProp )
         									o[p] = data;
         							}
 	        					}
 	        				);
+	        			}
+	        			else
+	        			{
+							for(var p in $rootScope.json )
+							{
+								if( p == $scope.currentProp )
+									$rootScope.json[p] = data;
+							}
 	        			}
 	        			break;
 	        		case $rootScope.type.INTEGER:
