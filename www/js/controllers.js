@@ -128,6 +128,28 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 	        			}
 	        			break;
 	        		case $rootScope.type.BOOLEAN:
+	        			if( isRootArray ) // Si le JSON est un tableau d'objet
+	        			{
+	        				$rootScope.json.forEach(
+	        					function( o )
+	        					{
+        							for(var p in o )
+        							{
+        								if( p == $scope.currentProp )
+        									o[p] = data == "true";
+        							}
+	        					}
+	        				);
+	        			}
+	        			else
+	        			{
+							for(var p in $rootScope.json )
+							{
+								if( p == $scope.currentProp )
+									$rootScope.json[p] = data == "true";
+							}
+	        			}
+	        			break;
 	        			break;
 	        	}
 
