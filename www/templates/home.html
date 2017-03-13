@@ -26,9 +26,15 @@
 						placeholder="{{ dataType }}">
 					<button
 						class="button button-assertive"
-						ng-if="dataType==type.VALEUR"
+						ng-if="dataType == type.VALEUR"
 						ng-click="setTypeAndData( dataInput )">
 						OK
+					</button>
+					<button
+						class="button button-assertive"
+						ng-if="!endArray"
+						ng-click="setTypeAndData( dataInput, null, true )">
+						![]
 					</button>
 				</div>
 			</div>

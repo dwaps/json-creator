@@ -12,7 +12,7 @@ angular
 	.controller('homeCtrl', homeCtrl)
 ;
 
-function homeCtrl($scope, $rootScope, $filter, dwapsLog)
+function homeCtrl($scope, $rootScope, $filter, dwapsLog, dwapsToast)
 {
     $rootScope.type = {
         ARRAY: "tab",
@@ -31,8 +31,9 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 
 	var isRootArray = true;
 	$scope.jsonStart = true;
+	$scope.endArray = true;
 
-    $scope.setTypeAndData = function( data, type )
+    $scope.setTypeAndData = function( data, type, endArray )
     {
     	var tmp = "";
 
@@ -78,9 +79,46 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 	        	switch( $scope.currentType )
 	        	{
 	        		case $rootScope.type.ARRAY:
+	        			$scope.endArray = endArray;
+
+	        			if( isRootArray ) // Si le JSON est un tableau d'objet
+	        			{
+	        				$rootScope.json.forEach(
+	        					function( o )
+	        					{
+        							for(var p in o )
+        							{
+        								if( p == $scope.currentProp )
+        								{
+        									if( !Array.isArray(o[p]) ) o[p] = [];
+	        								o[p].push(data);
+        								}
+        							}
+	        					}
+	        				);
+	        			}
+	        			else
+	        			{
+							for(var p in $rootScope.json )
+							{
+								if( p == $scope.currentProp )
+								{
+									if( !Array.isArray($rootScope.json[p]) ) $rootScope.json[p] = [];
+    								$rootScope.json[p].push(data);
+								}
+							}
+	        			}
+
+			        	// Si l'utilisateur a fini de renseigner la valeur,
+			        	// il faut repasser en mode "saisir une nouvelle propriété"
+			        	if($scope.endArray) $scope.dataType = $rootScope.type.PROPRIETE;
+
 	        			break;
+
 	        		case $rootScope.type.OBJECT:
+	        			// $scope.setTypeAndData( data, type );
 	        			break;
+
 	        		case $rootScope.type.STRING:
 	        			if( isRootArray ) // Si le JSON est un tableau d'objet
 	        			{
@@ -103,7 +141,13 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 									$rootScope.json[p] = data;
 							}
 	        			}
+
+			        	// Si l'utilisateur a fini de renseigner la valeur,
+			        	// il faut repasser en mode "saisir une nouvelle propriété"
+			        	$scope.dataType = $rootScope.type.PROPRIETE;
+
 	        			break;
+
 	        		case $rootScope.type.INTEGER:
 	        			if( isRootArray ) // Si le JSON est un tableau d'objet
 	        			{
@@ -126,7 +170,13 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 									$rootScope.json[p] = parseInt(data);
 							}
 	        			}
+
+			        	// Si l'utilisateur a fini de renseigner la valeur,
+			        	// il faut repasser en mode "saisir une nouvelle propriété"
+			        	$scope.dataType = $rootScope.type.PROPRIETE;
+
 	        			break;
+
 	        		case $rootScope.type.BOOLEAN:
 	        			if( isRootArray ) // Si le JSON est un tableau d'objet
 	        			{
@@ -149,13 +199,14 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 									$rootScope.json[p] = data == "true";
 							}
 	        			}
-	        			break;
-	        			break;
-	        	}
 
-	        	// Si l'utilisateur a fini de renseigner la valeur,
-	        	// il faut repasser en mode "saisir une nouvelle propriété"
-	        	$scope.dataType = $rootScope.type.PROPRIETE;
+			        	// Si l'utilisateur a fini de renseigner la valeur,
+			        	// il faut repasser en mode "saisir une nouvelle propriété"
+			        	$scope.dataType = $rootScope.type.PROPRIETE;
+
+	        			break;
+
+	        	}
         	}
 
     		dwapsLog.show(JSON.stringify($rootScope.json));
