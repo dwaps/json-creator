@@ -12,7 +12,7 @@ angular
 	.controller('homeCtrl', homeCtrl)
 ;
 
-function homeCtrl($scope, $rootScope, dwapsLog)
+function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 {
     $rootScope.type = {
         ARRAY: "tab",
@@ -53,7 +53,7 @@ function homeCtrl($scope, $rootScope, dwapsLog)
         	{
         		// Mise à jour du type de la valeur à venir : (array, boolean...)
         		$scope.currentType = type;
-        		$scope.currentProp = data.toLowerCase();
+        		$scope.currentProp = $filter("slugify")(data, data);
         		tmp = '{"'+$scope.currentProp+'":""}';
         		var toJson = JSON.parse(tmp);
 				if(isRootArray) $rootScope.json.push(toJson);

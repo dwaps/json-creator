@@ -10,6 +10,7 @@ angular
     .module('app', [
                     'ionic',
                     'controllers',
+                    'filters',
                     'dwapsLog',
                     'dwapsToast'
                     ])
