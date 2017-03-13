@@ -7,6 +7,18 @@
 **/
 
 
+
+/**
+ * A FAIRE !!!
+ * 
+ * Pour le moment les valers des tableaux n'acceptent qu'un seul type (string)
+ */
+
+
+ console.log(JSON.parse('["jh","jh",152,{"id":5789}]'))
+
+
+
 angular
 	.module('controllers', [])
 	.controller('homeCtrl', homeCtrl)

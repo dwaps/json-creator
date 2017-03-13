@@ -72,11 +72,24 @@
 				</div>
 			</div>
 
-			<!-- JSON DEBUG -->
-			<div class="card debug">
-				<!-- {{ json|filter:raw}} -->
-			</div>
+		</div>
+		
+
+		<!-- JSON DEBUG -->
+		<div class="card debug" ng-if="json.length>0">
+			{{ json|filter:raw }}
 		</div>
 
 	</ion-content>
+
+	<ion-footer-bar>
+		<div class="button-bar">
+			<a
+				class="button button-assertive"
+				ui-sref="home"
+				ui-sref-opts="{reload:true,notify:true}">
+				REFRESH
+			</a>
+		</div>
+	</ion-footer-bar>
 </ion-view>
