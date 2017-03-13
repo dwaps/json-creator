@@ -57,7 +57,7 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 
         		tmp = '{"'+$scope.currentProp+'":""}';
         		var toJson = JSON.parse(tmp);
-        		
+
 				if(isRootArray) $rootScope.json.push(toJson);
 				else
 				{
@@ -105,6 +105,27 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog)
 	        			}
 	        			break;
 	        		case $rootScope.type.INTEGER:
+	        			if( isRootArray ) // Si le JSON est un tableau d'objet
+	        			{
+	        				$rootScope.json.forEach(
+	        					function( o )
+	        					{
+        							for(var p in o )
+        							{
+        								if( p == $scope.currentProp )
+        									o[p] = parseInt(data);
+        							}
+	        					}
+	        				);
+	        			}
+	        			else
+	        			{
+							for(var p in $rootScope.json )
+							{
+								if( p == $scope.currentProp )
+									$rootScope.json[p] = parseInt(data);
+							}
+	        			}
 	        			break;
 	        		case $rootScope.type.BOOLEAN:
 	        			break;
