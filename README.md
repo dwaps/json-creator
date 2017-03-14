@@ -42,4 +42,4 @@ Une fois le JSON constitué, cliquez sur "Construire le fichier".
 
 ---
 
-[® DWAPS Formation - Michael Cornillon] (http://dwaps.fr "DWAPS")
+[® DWAPS Formation - Michael Cornillon](http://dwaps.fr "DWAPS")
