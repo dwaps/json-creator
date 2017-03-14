@@ -15,16 +15,17 @@
  */
 
 
- console.log(JSON.parse('["jh","jh",152,{"id":5789}]'))
-
-
-
 angular
 	.module('controllers', [])
 	.controller('homeCtrl', homeCtrl)
 ;
 
-function homeCtrl($scope, $rootScope, $filter, dwapsLog, dwapsToast)
+function homeCtrl(
+		$scope,
+		$rootScope,
+		$filter,
+		dwapsLog,
+		dwapsToast)
 {
     $rootScope.type = {
         ARRAY: "tab",
@@ -224,5 +225,15 @@ function homeCtrl($scope, $rootScope, $filter, dwapsLog, dwapsToast)
     		dwapsLog.show(JSON.stringify($rootScope.json));
     		// dwapsLog.show($rootScope.json);
         }
+    };
+
+    $scope.saveFile = function( json )
+    {
+    	$rootScope.createFile("test", json);
+    };
+
+    $scope.recupFile = function( fn )
+    {
+    	$rootScope.readFile( fn );
     };
 }
