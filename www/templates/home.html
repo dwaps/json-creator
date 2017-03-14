@@ -77,14 +77,24 @@
 
 		<!-- AFFICHAGE FICHIER -->
 		<div class="card" ng-show="file.content.length>0">
-			{{ file.content }}
+			<h3>Fichier : <span ng-bind="file.name"></span></h3>
+			<p ng-bind="file.content"></p>
 			<a ng-click="file.content=''" class="button button-light">XXX</a>
 		</div>
 		
 
 		<!-- JSON DEBUG -->
 		<div class="card debug" ng-show="json">
-			{{ json }}
+			<h3>APPERÇU JSON</h3>
+			<p ng-cloak>{{ json }}</p>
+		</div>
+
+		<div class="card">
+			<a
+				class="button button-full button-assertive"
+				ng-click="clearFiles()">
+				REMOVE MAIN DIR
+			</a>
 		</div>
 
 	</ion-content>
@@ -94,8 +104,7 @@
 			<a
 				class="button button-assertive"
 				ui-sref="home"
-				ui-sref-opts="{reload:true}"
-				ng-click="json = null">
+				ui-sref-opts="{reload:true}">
 				REFRESH
 			</a>
 			<a

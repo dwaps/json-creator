@@ -17,7 +17,9 @@ angular
                     ])
 
     .constant( "CACHE_ACTIVED", false )
+    .constant( "LOG_ACTIVATED", true )
     .constant( "LIST_FILES_SAVED", "/.DWAPSFormation_listeFichiersJSON.txt" )
+    .constant( "DIR_NAME", "JSONCreator" )
 
     .config( configure )
     .run( runner )
@@ -40,7 +42,7 @@ function configure($stateProvider, $urlRouterProvider, CACHE_ACTIVED)
     $urlRouterProvider.otherwise('/');
 }
 
-function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, LIST_FILES_SAVED)
+function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LIST_FILES_SAVED, LOG_ACTIVATED)
 {
     $ionicPlatform.ready(function()
     {
@@ -55,13 +57,14 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, LIST_FILES_S
             StatusBar.styleDefault();
         }
 
+        dwapsLog.active( LOG_ACTIVATED );
+
         $rootScope.json = null;
         $rootScope.listFilesSaved = [];
         $rootScope.ecrasementFileList = false; // Au démarrage, on doit pas écraser ce fichier
 
         $rootScope.createFile = function( fn, json ) { // PREVOIR ALTERNATIVE POUR LE WEB
             var
-                DIR_NAME = "JSONCreator",
                 FILE_NAME = fn + ".json",
                 CONTENT = json
             ;
@@ -103,8 +106,8 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, LIST_FILES_S
                                     {
                                         dwapsLog.show('SUCCESS : FILE CREATED');
                                         $rootScope.listFilesSaved.push(fn);
-                                        console.log("FICHIERS SAUVEGARDES")
-                                        console.log($rootScope.listFilesSaved)
+                                        dwapsLog.show("FICHIERS SAUVEGARDES")
+                                        dwapsLog.show($rootScope.listFilesSaved)
                                         $rootScope.createFile();
                                     },
                                     function (error)
@@ -160,13 +163,13 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, LIST_FILES_S
                                     function (success)
                                     {
                                         dwapsLog.show('SUCCESS : FILE LIST CREATED');
-                                        console.log(success);
+                                        dwapsLog.show(success);
                                     },
                                     function (error)
                                     {
                                         dwapsLog.show('ERROR : FILE LIST NOT CREATED !');
                                     }
-                            );
+                                );
 
                             $rootScope.ecrasementFileList = true;
                         }
@@ -179,16 +182,13 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, LIST_FILES_S
 
 
         $rootScope.readFile = function( fn ) {
-            var
-                DIR_NAME = "JSONCreator",
-                FILE_NAME = fn + ".json"
-            ;
+            var FILE_NAME = fn + ".json";
 
             $ionicPlatform.ready(function()
                 {
                     if(fn)
                     {
-                        console.log("LECTURE D'UN FICHIER SPECIFIQUE");
+                        dwapsLog.show("LECTURE D'UN FICHIER SPECIFIQUE");
                         // LECTURE FICHIER .json
                         $cordovaFile.readAsText(
                             cordova.file.dataDirectory,
@@ -207,7 +207,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, LIST_FILES_S
                     }
                     else // Si le nom de fichier n'est pas renseigné, on récupère la liste de tous les fichiers sauvegardés
                     {
-                        console.log("LECTURE DE LA LISTE DES FICHIERS SAUVEGARDES");
+                        dwapsLog.show("LECTURE DE LA LISTE DES FICHIERS SAUVEGARDES");
                         // LECTURE FICHIER .json
                         $cordovaFile.readAsText(
                             cordova.file.dataDirectory,
@@ -216,10 +216,10 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, LIST_FILES_S
                                 function (output)
                                 {
                                     dwapsLog.show('SUCCESS : READING FILE LIST...');
-                                    console.log("Liste des fichiers avant récup :")
-                                    console.log($rootScope.listFilesSaved);
-                                    console.log("Sortie capturé par le lecteur")
-                                    console.log(output);
+                                    dwapsLog.show("Liste des fichiers avant récup :")
+                                    dwapsLog.show($rootScope.listFilesSaved);
+                                    dwapsLog.show("Sortie capturé par le lecteur")
+                                    dwapsLog.show(output);
 
                                     var tab = output.split(",");
                                     $rootScope.listFilesSaved = [];
@@ -233,8 +233,8 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, LIST_FILES_S
                                             }
                                         }
                                     );
-                                    console.log("Liste des fichiers après récup :");
-                                    console.log($rootScope.listFilesSaved);
+                                    dwapsLog.show("Liste des fichiers après récup :");
+                                    dwapsLog.show($rootScope.listFilesSaved);
                                 },
                                 function (error)
                                 {
@@ -242,6 +242,29 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, LIST_FILES_S
                                 }
                             );
                     }
+                }
+            );
+        };
+
+        $rootScope.clearFiles = function() {
+            $ionicPlatform.ready(function()
+                {
+                    dwapsLog.show("\nPREPARATION EFFACEMENT FICHIER LIST...");
+
+                    $cordovaFile.removeFile(
+                        cordova.file.dataDirectory,
+                        DIR_NAME + "/" + LIST_FILES_SAVED) // Ecrasement
+                        .then(
+                            function (success)
+                            {
+                                dwapsLog.show('SUCCESS : FILE LIST REMOVED');
+                                $rootScope.listFilesSaved = [];
+                            },
+                            function (error)
+                            {
+                                dwapsLog.show('ERROR : FILE LIST NOT REMOVED !');
+                            }
+                        );
                 }
             );
         };

@@ -240,31 +240,24 @@ function homeCtrl(
     $scope.adminFile = function( json )
     {
     	if(undefined !== json)
-    	{
     		$scope.openPopup(json);
-    		console.log("création fichier")
-    		console.log(json)
-    	}
     	else
-    	{
     		$scope.openPopup();
-    		console.log("lecture fichier")
-    		console.log(json)
-    	}
     };
 
-    $scope.recupFile = function( f )
+    $scope.recupFile = function( fn )
     {
-    	// $scope.file = f;
-    	// console.log($scope.f);
+    	$scope.file.name = fn;
+    	dwapsLog.show("Fichier affiché :");
+    	dwapsLog.show($scope.fn);
     	$scope.popup.close();
-    	$rootScope.readFile();
+    	$rootScope.readFile(fn);
     };
 
 	$rootScope.$on( "contentFileReady", function( event, data )
 	{
-		console.log("Récup content file :");
-		console.log(data);
+		dwapsLog.show("Récup content file :");
+		dwapsLog.show(data);
 		$scope.file.content = data;
 	});
 
@@ -303,26 +296,11 @@ function homeCtrl(
 		}
 		else
 		{
-			$scope.files = [
-				{
-					name: "M",
-					content: "Fichier M"
-				},
-				{
-					name: "Y",
-					content: "Fichier Y"
-				},
-				{
-					name: "T",
-					content: "Fichier T"
-				}
-			];
-
 			$scope.popup = $ionicPopup.show(
 				{
 					template: '<ion-list>\
-									<ion-item ng-repeat="f in files" ng-click="recupFile(f)">\
-										{{ f.name }}.json\
+									<ion-item ng-repeat="f in listFilesSaved" ng-click="recupFile(f)">\
+										{{ f }}.json\
 									</ion-item>\
 								</ion-list>',
 					title: 'Choisir un fichier',
@@ -335,10 +313,10 @@ function homeCtrl(
 			.then(
 				function(res)
 				{
-					console.log('Tapped!', res);
+					dwapsLog.show('Tapped!', res);
 					if(!json)
 					{
-						// console.log($scope.file);
+						// dwapsLog.show($scope.file);
 					}
 				}
 			);
