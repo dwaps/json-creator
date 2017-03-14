@@ -24,6 +24,8 @@ function homeCtrl(
 		$scope,
 		$rootScope,
 		$filter,
+		$timeout,
+		$ionicPopup,
 		dwapsLog,
 		dwapsToast)
 {
@@ -227,13 +229,126 @@ function homeCtrl(
         }
     };
 
-    $scope.saveFile = function( json )
-    {
-    	$rootScope.createFile("test", json);
+
+    // GESTION FICHIER
+    $scope.popup = null;
+    $scope.file = {
+    	name: "",
+    	content: ""
     };
 
-    $scope.recupFile = function( fn )
+    $scope.adminFile = function( json )
     {
-    	$rootScope.readFile( fn );
+    	if(undefined !== json)
+    	{
+    		$scope.openPopup(json);
+    		console.log("création fichier")
+    		console.log(json)
+    	}
+    	else
+    	{
+    		$scope.openPopup();
+    		console.log("lecture fichier")
+    		console.log(json)
+    	}
+    };
+
+    $scope.recupFile = function( f )
+    {
+    	// $scope.file = f;
+    	// console.log($scope.f);
+    	$scope.popup.close();
+    	$rootScope.readFile();
+    };
+
+	$rootScope.$on( "contentFileReady", function( event, data )
+	{
+		console.log("Récup content file :");
+		console.log(data);
+		$scope.file.content = data;
+	});
+
+    $scope.openPopup = function( json )
+    {
+    	$scope.file.name = "";
+    	$scope.file.content = "";
+
+		if(undefined !== json)
+		{
+			$scope.popup = $ionicPopup.show(
+				{
+					template: '<input type="text" ng-model="file.name">',
+					title: 'Nom du fichier',
+					subTitle: '(sans l\'extension)',
+					scope: $scope,
+					buttons: [
+						{ text: 'Annuler' },
+						{
+							text: '<b>OK</b>',
+							type: 'button-positive',
+							onTap: function(e) {
+									if (!$scope.file.name)
+									{
+										e.preventDefault();
+									}
+									else
+									{
+										$rootScope.createFile( $scope.file.name, json );
+									}
+								}
+						}
+					]
+				}
+			);
+		}
+		else
+		{
+			$scope.files = [
+				{
+					name: "M",
+					content: "Fichier M"
+				},
+				{
+					name: "Y",
+					content: "Fichier Y"
+				},
+				{
+					name: "T",
+					content: "Fichier T"
+				}
+			];
+
+			$scope.popup = $ionicPopup.show(
+				{
+					template: '<ion-list>\
+									<ion-item ng-repeat="f in files" ng-click="recupFile(f)">\
+										{{ f.name }}.json\
+									</ion-item>\
+								</ion-list>',
+					title: 'Choisir un fichier',
+					scope: $scope
+				}
+			);
+		}
+
+		$scope.popup
+			.then(
+				function(res)
+				{
+					console.log('Tapped!', res);
+					if(!json)
+					{
+						// console.log($scope.file);
+					}
+				}
+			);
+
+		// $timeout(
+		// 	function()
+		// 	{
+		// 		popupCreateFile.close();
+		// 	},
+		// 	3000
+		// );
     };
 }

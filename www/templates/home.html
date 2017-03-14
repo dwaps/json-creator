@@ -2,7 +2,7 @@
 	<ion-content>
 		
 		<!-- CHOIX RACINE TABLEAU / OBJET -->
-		<div class="button-bar" ng-if="jsonStart">
+		<div class="button-bar" ng-show="jsonStart">
 			<a
 				class="button button-full button-assertive"
 				ng-click="setTypeAndData( null, true )">
@@ -15,7 +15,7 @@
 			</a>
 		</div>
 		
-		<div class="card" ng-if="!jsonStart">
+		<div class="card" ng-show="!jsonStart">
 			<!-- NOM PROPRIETE | VALEUR -->
 			<div class="list list-inset">
 				<div class="item item-input">
@@ -26,13 +26,13 @@
 						placeholder="{{ dataType }}">
 					<button
 						class="button button-assertive"
-						ng-if="dataType == type.VALEUR"
+						ng-show="dataType == type.VALEUR"
 						ng-click="setTypeAndData( dataInput )">
 						OK
 					</button>
 					<button
 						class="button button-assertive"
-						ng-if="!endArray"
+						ng-show="!endArray"
 						ng-click="setTypeAndData( dataInput, null, true )">
 						![]
 					</button>
@@ -40,7 +40,7 @@
 			</div>
 			
 			<!-- TYPE VALEUR -->
-			<div class="list list-inset" ng-if="dataType==type.PROPRIETE">
+			<div class="list list-inset" ng-show="dataType==type.PROPRIETE">
 				<div class="item item-input">
 					<div class="button-bar">
 						<a
@@ -75,9 +75,16 @@
 		</div>
 		
 
+		<!-- AFFICHAGE FICHIER -->
+		<div class="card" ng-show="file.content.length>0">
+			{{ file.content }}
+			<a ng-click="file.content=''" class="button button-light">XXX</a>
+		</div>
+		
+
 		<!-- JSON DEBUG -->
-		<div class="card debug" ng-if="json.length>0">
-			{{ json|filter:raw }}
+		<div class="card debug" ng-show="json">
+			{{ json }}
 		</div>
 
 	</ion-content>
@@ -87,17 +94,19 @@
 			<a
 				class="button button-assertive"
 				ui-sref="home"
-				ui-sref-opts="{reload:true,notify:true}">
+				ui-sref-opts="{reload:true}"
+				ng-click="json = null">
 				REFRESH
 			</a>
 			<a
+				ng-show="!jsonStart"
 				class="button button-royal"
-				ng-click="saveFile( json )">
+				ng-click="adminFile( json )">
 				SAVE
 			</a>
 			<a
 				class="button button-royal"
-				ng-click="recupFile( 'test' )">
+				ng-click="adminFile()">
 				OPEN
 			</a>
 		</div>
