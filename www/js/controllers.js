@@ -26,8 +26,11 @@ function homeCtrl(
 		$filter,
 		$timeout,
 		$ionicPopup,
+		$cordovaEmailComposer,
 		dwapsLog,
-		dwapsToast)
+		dwapsToast,
+		INVIT_CONTACT,
+		DIR_NAME)
 {
     $rootScope.type = {
         ARRAY: "tab",
@@ -329,4 +332,38 @@ function homeCtrl(
 		// 	3000
 		// );
     };
+
+	$scope.sendByMail = function( fn, fc )
+	{
+		dwapsLog.show("Envoi par mail en cours...");
+
+		var filePath = "file:///storage/emulated/0/" + DIR_NAME + "/" + fn + ".json";
+		console.log(filePath);
+		
+		$cordovaEmailComposer
+			.isAvailable()
+			.then(
+				function()
+				{
+				},
+				function()
+				{
+				}
+			);
+
+		var email = {
+			attachments: [
+				filePath,
+				'file://img/logo.gif'
+			],
+			subject: 'DWAPS Formation : JSONCreator',
+			body: '<h3>Bonjour,</h3>\
+					<p>Voici le contenu de votre fichier json :</p>\
+					<strong>' + fc + '</strong>\
+					<p><a href="http://dwaps.fr">DWAPS Formation - Michael Cornillon</a></p>',
+			isHtml: true
+		};
+
+		$cordovaEmailComposer.open(email);
+	};
 }

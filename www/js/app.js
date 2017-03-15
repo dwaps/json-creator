@@ -20,6 +20,7 @@ angular
     .constant( "LOG_ACTIVATED", true )
     .constant( "LIST_FILES_SAVED", "/.DWAPSFormation_listeFichiersJSON.txt" )
     .constant( "DIR_NAME", "JSONCreator" )
+    .constant( "INVIT_CONTACT", "<p>Contactez le développeur</p>" )
 
     .config( configure )
     .run( runner )
@@ -77,7 +78,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LI
                         // VERIFICATION DE L'EXISTENCE DU REPERTOIRE PRINCIPAL
                         $cordovaFile
                             .checkDir(
-                                cordova.file.dataDirectory,
+                                "file:///storage/emulated/0/",
                                 DIR_NAME
                             )
                             .then(
@@ -97,7 +98,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LI
 
                             // CREATION FICHIER .json
                             $cordovaFile.writeFile(
-                                cordova.file.dataDirectory,
+                                "file:///storage/emulated/0/",
                                 DIR_NAME + "/" + FILE_NAME,
                                 CONTENT,
                                 true) // Ecrasement autorisé
@@ -121,7 +122,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LI
                             // CREATION REPERTOIRE JSONCreator
                             $cordovaFile
                                 .createDir(
-                                    cordova.file.dataDirectory,
+                                    "file:///storage/emulated/0/",
                                     DIR_NAME,
                                     false)
                                 .then(
@@ -138,7 +139,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LI
                             // VERIFICATION DE L'EXISTENCE DU FICHIER
                             $cordovaFile
                                 .checkFile(
-                                    cordova.file.dataDirectory,
+                                    "file:///storage/emulated/0/",
                                     DIR_NAME + "/" + LIST_FILES_SAVED
                                 )
                                 .then(
@@ -146,6 +147,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LI
                                     {
                                         dwapsLog.show('SUCCESS : FILE LIST FOUND');
                                         $rootScope.readFile();
+                                        dwapsLog.show(success);
                                     },
                                     function (error)
                                     {
@@ -155,7 +157,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LI
 
                             // CREATION FICHIER .json
                             $cordovaFile.writeFile(
-                                cordova.file.dataDirectory,
+                                "file:///storage/emulated/0/",
                                 DIR_NAME + "/" + LIST_FILES_SAVED,
                                 $rootScope.listFilesSaved,
                                 $rootScope.ecrasementFileList) // Ecrasement non autorisé si on est au démarrage
@@ -191,7 +193,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LI
                         dwapsLog.show("LECTURE D'UN FICHIER SPECIFIQUE");
                         // LECTURE FICHIER .json
                         $cordovaFile.readAsText(
-                            cordova.file.dataDirectory,
+                            "file:///storage/emulated/0/",
                             DIR_NAME + "/" + FILE_NAME)
                             .then(
                                 function (output)
@@ -210,7 +212,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LI
                         dwapsLog.show("LECTURE DE LA LISTE DES FICHIERS SAUVEGARDES");
                         // LECTURE FICHIER .json
                         $cordovaFile.readAsText(
-                            cordova.file.dataDirectory,
+                            "file:///storage/emulated/0/",
                             DIR_NAME + "/" + LIST_FILES_SAVED)
                             .then(
                                 function (output)
@@ -252,7 +254,7 @@ function runner($ionicPlatform, $rootScope, $cordovaFile, dwapsLog, DIR_NAME, LI
                     dwapsLog.show("\nPREPARATION EFFACEMENT FICHIER LIST...");
 
                     $cordovaFile.removeFile(
-                        cordova.file.dataDirectory,
+                        "file:///storage/emulated/0/",
                         DIR_NAME + "/" + LIST_FILES_SAVED) // Ecrasement
                         .then(
                             function (success)
