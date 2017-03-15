@@ -20,7 +20,11 @@
     "cordova-plugin-statusbar",
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
-    "ionic-plugin-keyboard"
+    "ionic-plugin-keyboard",
+    "com.verso.cordova.clipboard",
+    "cordova-plugin-compat",
+    "cordova-plugin-email-composer",
+    "cordova-plugin-file"
   ],
   "cordovaPlatforms": []
 }
