@@ -27,6 +27,7 @@ function homeCtrl(
 		$timeout,
 		$ionicPopup,
 		$cordovaEmailComposer,
+		$cordovaClipboard,
 		dwapsLog,
 		dwapsToast,
 		INVIT_CONTACT,
@@ -357,13 +358,42 @@ function homeCtrl(
 				'file://img/logo.gif'
 			],
 			subject: 'DWAPS Formation : JSONCreator',
-			body: '<h3>Bonjour,</h3>\
-					<p>Voici le contenu de votre fichier json :</p>\
+			body: '<p>Bonjour,\
+					<br><br>Voici le contenu de votre fichier json :</p>\
 					<strong>' + fc + '</strong>\
 					<p><a href="http://dwaps.fr">DWAPS Formation - Michael Cornillon</a></p>',
 			isHtml: true
 		};
 
 		$cordovaEmailComposer.open(email);
+	};
+
+	$scope.copyToClipboard = function( content )
+	{
+		dwapsLog.show("COPYING TO CLIPBOARD");
+
+		$cordovaClipboard
+			.copy( content )
+			.then(
+				function ()
+				{
+					dwapsLog.show("SUCCESS : TEXTE COPIED");
+				},
+				function ()
+				{
+					dwapsLog.show("ERROR : TEXTE NOT COPIED !");
+				}
+			);
+
+		$cordovaClipboard
+			.paste()
+			.then(
+				function ( result )
+				{
+				},
+				function ()
+				{
+				}
+			);
 	};
 }

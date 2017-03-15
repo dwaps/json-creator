@@ -79,11 +79,20 @@
 		<div class="card" ng-show="file.content.length>0">
 			<h3>Fichier : <span ng-bind="file.name"></span></h3>
 			<p ng-bind="file.content"></p>
-			<a ng-click="file.content=''" class="button button-light">XXX</a>
+			<a
+				ng-click="file.content=''"
+				class="button button-full button-light">
+				CLOSE FILE
+			</a>
 			<a
 				class="button button-full button-assertive"
 				ng-click="sendByMail( file.name, file.content )">
 				SEND BY MAIL
+			</a>
+			<a
+				class="button button-full button-assertive"
+				ng-click="copyToClipboard( file.content )">
+				COPY TO CLIPBOARD
 			</a>
 		</div>
 		
