@@ -28,6 +28,7 @@ function homeCtrl(
 		$ionicPopup,
 		$cordovaEmailComposer,
 		$cordovaClipboard,
+		fileProvider,
 		dwapsLog,
 		dwapsToast,
 		INVIT_CONTACT,
@@ -255,7 +256,12 @@ function homeCtrl(
     	dwapsLog.show("Fichier affiché :");
     	dwapsLog.show($scope.fn);
     	$scope.popup.close();
-    	$rootScope.readFile(fn);
+    	fileProvider.readFile(fn);
+    };
+
+    $scope.clearFiles = function()
+    {
+    	fileProvider.clearFiles();
     };
 
 	$rootScope.$on( "contentFileReady", function( event, data )
@@ -284,14 +290,8 @@ function homeCtrl(
 							text: '<b>OK</b>',
 							type: 'button-positive',
 							onTap: function(e) {
-									if (!$scope.file.name)
-									{
-										e.preventDefault();
-									}
-									else
-									{
-										$rootScope.createFile( $scope.file.name, json );
-									}
+									if (!$scope.file.name) e.preventDefault();
+									else fileProvider.createFile( $scope.file.name, json );
 								}
 						}
 					]
