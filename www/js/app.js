@@ -64,6 +64,9 @@ function runner(
             StatusBar.styleDefault();
         }
 
+        dwaps.init();
+        dwaps.animLogo();
+
         dwapsLog.active( LOG_ACTIVATED );
 
         $rootScope.json = null;
@@ -75,3 +78,38 @@ function runner(
         fileProvider.createFile();
     });
 }
+
+var dwaps = {
+    init: function()
+    {
+        this.logoDWAPS = document.querySelector("#logo-dwaps img");
+        this.normal = this.logoDWAPS.src;
+        this.cligne = this.normal.replace(".png","") + "-cligne.png";
+
+        this.logoDWAPS.style.marginTop = (window.innerHeight/2 - this.logoDWAPS.height/2) + "px";
+    },
+    animLogo: function()
+    {
+        var
+            THIS = this
+            aleat = Math.round((Math.random() * 2000))
+        ;
+
+        setTimeout(
+            function()
+            {
+                THIS.logoDWAPS.src = THIS.cligne;
+
+                setTimeout(
+                    function()
+                    {
+                        THIS.logoDWAPS.src = THIS.normal;
+                        THIS.animLogo();
+                    },
+                    250
+                );
+            },
+            aleat
+        );
+    }
+};

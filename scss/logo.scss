@@ -1,0 +1,23 @@
+#logo-dwaps
+{
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	text-align: center;
+	opacity: 0.5;
+}
+
+#logo-dwaps img
+{
+	-webkit-animation-delay: 1s;
+	-moz-animation-delay: 1s;
+	-ms-animation-delay: 1s;
+	-o-animation-delay: 1s;
+	animation-delay: 1s;
+	opacity: 0.5;
+}

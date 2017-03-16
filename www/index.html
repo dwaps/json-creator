@@ -40,10 +40,11 @@
         <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
         <script src="cordova.js"></script>
 
+        <link href="css/ionic.app.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="lib/animate.css/animate.min.css">
+
         <script src="lib/dwaps/modules/logs.js"></script>
         <script src="lib/dwaps/modules/toast.js"></script>
-
-        <link href="css/ionic.app.min.css" rel="stylesheet">
 
         <script src="js/app.js"></script>
         <script src="js/controllers.js"></script>
@@ -53,6 +54,16 @@
 
 
     <body ng-app="app">
+
+        <!-- LOGO DWAPS -->
+            <div id="logo-dwaps">
+                <img
+                    class="animated fadeIn"
+                    width="80"
+                    height="80"
+                    src="img/logo-300.png"
+                    alt="Logo DWAPS Formation">
+            </div>
 
         <ion-nav-view></ion-nav-view>
 
