@@ -9825,19 +9825,168 @@ a.button {
   left: 0;
   right: 0;
   margin: auto;
-  text-align: center;
-  opacity: 0.5; }
+  text-align: center; }
 
 #logo-dwaps img {
-  -webkit-animation-delay: 1s;
-  -moz-animation-delay: 1s;
-  -ms-animation-delay: 1s;
-  -o-animation-delay: 1s;
-  animation-delay: 1s;
-  opacity: 0.5; }
+  -webkit-animation-delay: 0.5s;
+  -moz-animation-delay: 0.5s;
+  -ms-animation-delay: 0.5s;
+  -o-animation-delay: 0.5s;
+  animation-delay: 0.5s; }
 
 body {
   font-family: 'Abel', sans-serif; }
 
 body, ion-view, ion-content, ion-footer-bar, ion-nav-view, .card {
   background: transparent !important; }
+
+.greenDWAPS-txt {
+  color: #008F00 !important; }
+
+.redDWAPS-txt {
+  color: #AA0000 !important; }
+
+.greenDWAPS-bg {
+  background: #008F00 !important;
+  color: white;
+  font-weight: bold; }
+
+.redDWAPS-bg {
+  background: #AA0000 !important;
+  color: white;
+  font-weight: bold; }
+
+ion-footer-bar {
+  height: 60px !important; }
+
+.bts-array-object, .array-icon, .object-icon {
+  -webkit-animation: dwapsPulse 3s ease 0s infinite normal;
+  -khtml-animation: dwapsPulse 3s ease 0s infinite normal;
+  -moz-animation: dwapsPulse 3s ease 0s infinite normal;
+  -ms-animation: dwapsPulse 3s ease 0s infinite normal;
+  -o-animation: dwapsPulse 3s ease 0s infinite normal;
+  animation: dwapsPulse 3s ease 0s infinite normal;
+  position: relative;
+  top: 90px; }
+
+.array-icon {
+  background: url("../img/array.png") center no-repeat;
+  background-size: contain;
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  padding: 5px;
+  display: block; }
+
+.object-icon {
+  background: url("../img/object.png") center no-repeat;
+  background-size: contain;
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  padding: 5px;
+  display: block;
+  animation-delay: 0.1s; }
+
+.refresh-icon {
+  background: url("../img/refresh.png") center no-repeat;
+  background-size: contain;
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  padding: 5px;
+  display: block; }
+
+@-webkit-keyframes dwapsPulse {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  33% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  32% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  39% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  60% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); } }
+
+@-moz-keyframes dwapsPulse {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  33% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  32% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  39% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  60% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); } }
+
+@-ms-keyframes dwapsPulse {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  33% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  32% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  39% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  60% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); } }
+
+@-o-keyframes dwapsPulse {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  33% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  32% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  39% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  60% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); } }
+
+@keyframes dwapsPulse {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  33% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  32% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); }
+  39% {
+    -webkit-transform: rotate(0deg) scale(1.3);
+    transform: rotate(0deg) scale(1.3); }
+  60% {
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); } }
+
+/* <=IE9 */
+.dwapsPulse:not(:required) {
+  -webkit-animation: dwapsPulse 1300ms ease 0s infinite normal;
+  -khtml-animation: dwapsPulse 1300ms ease 0s infinite normal;
+  -moz-animation: dwapsPulse 1300ms ease 0s infinite normal;
+  -ms-animation: dwapsPulse 1300ms ease 0s infinite normal;
+  -o-animation: dwapsPulse 1300ms ease 0s infinite normal;
+  animation: dwapsPulse 1300ms ease 0s infinite normal; }

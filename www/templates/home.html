@@ -2,16 +2,16 @@
 	<ion-content>
 		
 		<!-- CHOIX RACINE TABLEAU / OBJET -->
-		<div class="button-bar" ng-show="jsonStart">
+		<div class="text-center" ng-show="jsonStart">
 			<a
-				class="button button-full button-assertive"
+				class="button button-light"
 				ng-click="setTypeAndData( null, true )">
-				[]
+				<span class="array-icon"></span>
 			</a>
 			<a
-				class="button button-full button-royal"
+				class="button button-light"
 				ng-click="setTypeAndData( null, false )">
-				{}
+				<span class="object-icon"></span>
 			</a>
 		</div>
 		
@@ -46,7 +46,7 @@
 						<a
 							ng-click="setTypeAndData( dataInput, type.ARRAY )"
 							class="button button-positive">
-							[]
+							<span class="array-icon"></span>
 						</a>
 						<a
 							ng-click="setTypeAndData( dataInput, type.OBJECT )"
@@ -117,20 +117,20 @@
 	<ion-footer-bar>
 		<div class="button-bar">
 			<a
-				class="button button-assertive"
+				class="button button-ligth"
 				ui-sref="home"
 				ui-sref-opts="{reload:true}">
-				REFRESH
+				<span class="refresh-icon"></span>
 			</a>
 			<a
 				ng-show="!jsonStart"
-				class="button button-royal"
+				class="button button-light"
 				ng-click="adminFile( json )">
 				SAVE
 			</a>
 			<a
 				ng-show="listFilesSaved.length>0"
-				class="button button-royal"
+				class="button button-light"
 				ng-click="adminFile()">
 				OPEN
 			</a>

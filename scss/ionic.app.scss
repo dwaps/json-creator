@@ -22,6 +22,9 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
 // PERSO
+@import "scss/constants";
+
 @import "scss/logo";
 @import "scss/main";
+@import "scss/buttons";
 

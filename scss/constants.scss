@@ -1,0 +1,25 @@
+// COULEUR DWAPS
+$greenDWAPS: #008F00;
+$redDWAPS: #AA0000;
+
+// animations
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} { @content }
+  @-moz-keyframes #{$name} { @content }
+  @-ms-keyframes #{$name} { @content }
+  @-o-keyframes #{$name} { @content }
+  @keyframes #{$name} { @content }
+}
+
+@mixin experimental($property, $value) {
+  -webkit-#{$property} : $value;
+  -khtml-#{$property} : $value;
+  -moz-#{$property} : $value;
+  -ms-#{$property} : $value;
+  -o-#{$property} : $value;
+  #{$property} : $value;
+}
+
+@mixin animation($value) {
+  @include experimental(animation, $value);
+}
