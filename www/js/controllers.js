@@ -34,6 +34,8 @@ function homeCtrl(
 		INVIT_CONTACT,
 		DIR_NAME)
 {
+    $rootScope.showLogo = true;
+
     $rootScope.type = {
         ARRAY: "tab",
         OBJECT: "obj",
@@ -56,6 +58,7 @@ function homeCtrl(
     $scope.setTypeAndData = function( data, type, endArray )
     {
     	var tmp = "";
+    	$rootScope.showLogo = false;
 
         if( $scope.jsonStart ) // 1er appel à la fonction : initialisation de l'objet JSON
         {

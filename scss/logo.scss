@@ -1,21 +1,76 @@
 #logo-dwaps
 {
 	position: absolute;
-	display: flex;
-	justify-content: center;
+	// display: flex;
+	// justify-content: center;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
-	margin: auto;
+	// margin: auto;
 	text-align: center;
-}
 
-#logo-dwaps img
-{
-	-webkit-animation-delay: 0.5s;
-	-moz-animation-delay: 0.5s;
-	-ms-animation-delay: 0.5s;
-	-o-animation-delay: 0.5s;
-	animation-delay: 0.5s;
+	img
+	{
+		-webkit-animation-delay: 0.5s;
+		-moz-animation-delay: 0.5s;
+		-ms-animation-delay: 0.5s;
+		-o-animation-delay: 0.5s;
+		animation-delay: 0.5s;
+	}
+
+	.common // Classe pour ::after et ::before
+	{
+		content: attr(data-fold);
+		position: absolute;
+		overflow: hidden;
+		width: 100%;
+		left: 0;
+	}
+
+
+	// TEXTE DWAPS FORMATION
+
+	div:nth-child(2)
+	{
+		// transform: scale(0.8);
+		
+		h1 {
+			position: relative;
+			top: 25px;
+			font-size: 3em;
+			// font-weight: bold;
+			font-family: 'Anton', sans-serif;
+			margin: 0;
+			text-rendering: optimizeLegibility;
+			color: rgba(lighten(#777, 40%), 0.5);
+			text-shadow:
+				1px 4px 6px lighten(#777, 60%),
+				0 0 0 darken(#777, 50%),
+				1px 4px 6px lighten(#777, 60%);
+			letter-spacing: 12px;
+			// white-space: nowrap;
+			
+			&:before {
+				@extend .common;
+				top: -4.8%;
+				height: 50%;
+				color: #FFFBF8;
+				transform: translate(1px, 2px) skew(-8deg) scale(1, 1.2);
+				z-index: 2;
+				text-shadow: 2px -1px 6px rgba(0,0,0,0.2);
+			}
+			
+			&:after {
+				@extend .common;
+				top: 0;
+				height: 100%;
+				z-index: 1;
+				color: #EEEAE8;
+				transform: translate(-1px, 2px) skew(10deg) scale(1, 0.8);
+				clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0% 100%);
+				text-shadow: 2px -1px 6px rgba(0,0,0,0.3);
+			}
+		}
+	}
 }

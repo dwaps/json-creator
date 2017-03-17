@@ -66,6 +66,7 @@ function runner(
 
         dwaps.init();
         dwaps.animLogo();
+        $rootScope.showLogo = true;
 
         dwapsLog.active( LOG_ACTIVATED );
 
@@ -82,7 +83,11 @@ function runner(
 var dwaps = {
     init: function()
     {
+        var THIS = this;
+
         this.logoDWAPS = document.querySelector("#logo-dwaps img");
+        this.texteDWAPS = document.querySelector("#logo-dwaps .texte-dwaps");
+
         this.normal = this.logoDWAPS.src;
         this.cligne = this.normal.replace(".png","") + "-cligne.png";
 
