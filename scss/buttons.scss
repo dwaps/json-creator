@@ -36,6 +36,16 @@
 	width: 40px;
 	margin-top: -5px;
 }
+.save-icon {
+	@include bts('../img/save.png');
+	width: 40px;
+	margin-top: -5px;
+}
+.open-file-icon {
+	@include bts('../img/open-file.png');
+	width: 40px;
+	margin-top: -5px;
+}
 // !
 
 @include keyframes(dwapsPulse) {
@@ -49,4 +59,37 @@
 /* <=IE9 */
 .dwapsPulse:not(:required) {
   @include animation(dwapsPulse 1300ms ease 0s infinite normal);
+}
+
+
+// BT JSON BUILDER
+.bloc-bts-json-builder
+{
+	width: 2em !important;
+}
+
+.small-array-icon
+{
+	@include bts('../img/array.png');
+	@extend .bloc-bts-json-builder;
+}
+.small-object-icon
+{
+	@include bts('../img/object.png');
+	@extend .bloc-bts-json-builder;
+}
+.small-string-icon
+{
+	@include bts('../img/string.png');
+	@extend .bloc-bts-json-builder;
+}
+.small-integer-icon
+{
+	@include bts('../img/integer.png');
+	@extend .bloc-bts-json-builder;
+}
+.small-boolean-icon
+{
+	@include bts('../img/boolean.png');
+	@extend .bloc-bts-json-builder;
 }

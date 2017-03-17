@@ -9929,6 +9929,28 @@ ion-footer-bar {
   width: 40px;
   margin-top: -5px; }
 
+.save-icon {
+  background: url("../img/save.png") center no-repeat;
+  background-size: contain;
+  width: 5em;
+  height: 5em;
+  margin: auto;
+  padding: 5px;
+  display: block;
+  width: 40px;
+  margin-top: -5px; }
+
+.open-file-icon {
+  background: url("../img/open-file.png") center no-repeat;
+  background-size: contain;
+  width: 5em;
+  height: 5em;
+  margin: auto;
+  padding: 5px;
+  display: block;
+  width: 40px;
+  margin-top: -5px; }
+
 @-webkit-keyframes dwapsPulse {
   0% {
     -webkit-transform: rotate(0deg) scale(1);
@@ -10022,3 +10044,51 @@ ion-footer-bar {
   -ms-animation: dwapsPulse 1300ms ease 0s infinite normal;
   -o-animation: dwapsPulse 1300ms ease 0s infinite normal;
   animation: dwapsPulse 1300ms ease 0s infinite normal; }
+
+.bloc-bts-json-builder, .small-array-icon, .small-object-icon, .small-string-icon, .small-integer-icon, .small-boolean-icon {
+  width: 2em !important; }
+
+.small-array-icon {
+  background: url("../img/array.png") center no-repeat;
+  background-size: contain;
+  width: 5em;
+  height: 5em;
+  margin: auto;
+  padding: 5px;
+  display: block; }
+
+.small-object-icon {
+  background: url("../img/object.png") center no-repeat;
+  background-size: contain;
+  width: 5em;
+  height: 5em;
+  margin: auto;
+  padding: 5px;
+  display: block; }
+
+.small-string-icon {
+  background: url("../img/string.png") center no-repeat;
+  background-size: contain;
+  width: 5em;
+  height: 5em;
+  margin: auto;
+  padding: 5px;
+  display: block; }
+
+.small-integer-icon {
+  background: url("../img/integer.png") center no-repeat;
+  background-size: contain;
+  width: 5em;
+  height: 5em;
+  margin: auto;
+  padding: 5px;
+  display: block; }
+
+.small-boolean-icon {
+  background: url("../img/boolean.png") center no-repeat;
+  background-size: contain;
+  width: 5em;
+  height: 5em;
+  margin: auto;
+  padding: 5px;
+  display: block; }

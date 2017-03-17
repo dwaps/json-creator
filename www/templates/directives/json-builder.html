@@ -1,0 +1,57 @@
+<div class="card">
+
+	<!-- NOM PROPRIETE | VALEUR -->
+	<div class="list list-inset">
+		<div class="item item-input">
+			<input
+				type="text"
+				ng-model="dataInput"
+				ng-focus="dataInput=''"
+				placeholder="{{ dataType }}">
+			<button
+				class="button button-assertive"
+				ng-show="dataType == type.VALEUR"
+				ng-click="setTypeAndData( dataInput )">
+				OK
+			</button>
+			<button
+				class="button button-assertive"
+				ng-show="!endArray"
+				ng-click="setTypeAndData( dataInput, null, true )">
+				![]
+			</button>
+		</div>
+	</div>
+	
+	<!-- TYPE VALEUR -->
+	<div class="list" ng-show="dataType==type.PROPRIETE">
+			<div class="row">
+				<a
+					ng-click="setTypeAndData( dataInput, type.ARRAY )"
+					class="col button button-full button-positive">
+					<span class="small-array-icon"></span>
+				</a>
+				<a
+					ng-click="setTypeAndData( dataInput, type.OBJECT )"
+					class="col button button-full button-royal">
+					<span class="small-object-icon"></span>
+				</a>
+				<a
+					ng-click="setTypeAndData( dataInput, type.STRING )"
+					class="col button button-full button-energized">
+					<span class="small-string-icon"></span>
+				</a>
+				<a
+					ng-click="setTypeAndData( dataInput, type.INTEGER )"
+					class="col button button-full button-balanced">
+					<span class="small-integer-icon"></span>
+				</a>
+				<a
+					ng-click="setTypeAndData( dataInput, type.BOOLEAN )"
+					class="col button button-full button-assertive">
+					<span class="small-boolean-icon"></span>
+				</a>
+		</div>
+	</div>
+
+</div>
