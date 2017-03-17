@@ -10,6 +10,7 @@ angular
     .module('app', [
                     'ionic',
                     'ngCordova',
+                    'directives',
                     'controllers',
                     'services',
                     'filters',

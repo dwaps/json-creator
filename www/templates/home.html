@@ -2,106 +2,18 @@
 	<ion-content>
 		
 		<!-- CHOIX RACINE TABLEAU / OBJET -->
-		<div class="text-center" ng-show="jsonStart">
-			<a
-				class="button button-light"
-				ng-click="setTypeAndData( null, true )">
-				<span class="array-icon"></span>
-			</a>
-			<a
-				class="button button-light"
-				ng-click="setTypeAndData( null, false )">
-				<span class="object-icon"></span>
-			</a>
-		</div>
-		
-		<div class="card" ng-show="!jsonStart">
-			<!-- NOM PROPRIETE | VALEUR -->
-			<div class="list list-inset">
-				<div class="item item-input">
-					<input
-						type="text"
-						ng-model="dataInput"
-						ng-focus="dataInput=''"
-						placeholder="{{ dataType }}">
-					<button
-						class="button button-assertive"
-						ng-show="dataType == type.VALEUR"
-						ng-click="setTypeAndData( dataInput )">
-						OK
-					</button>
-					<button
-						class="button button-assertive"
-						ng-show="!endArray"
-						ng-click="setTypeAndData( dataInput, null, true )">
-						![]
-					</button>
-				</div>
-			</div>
-			
-			<!-- TYPE VALEUR -->
-			<div class="list list-inset" ng-show="dataType==type.PROPRIETE">
-				<div class="item item-input">
-					<div class="button-bar">
-						<a
-							ng-click="setTypeAndData( dataInput, type.ARRAY )"
-							class="button button-positive">
-							<span class="array-icon"></span>
-						</a>
-						<a
-							ng-click="setTypeAndData( dataInput, type.OBJECT )"
-							class="button button-royal">
-							{}
-						</a>
-						<a
-							ng-click="setTypeAndData( dataInput, type.STRING )"
-							class="button button-energized">
-							""
-						</a>
-						<a
-							ng-click="setTypeAndData( dataInput, type.INTEGER )"
-							class="button button-balanced">
-							123
-						</a>
-						<a
-							ng-click="setTypeAndData( dataInput, type.BOOLEAN )"
-							class="button button-assertive">
-							bool
-						</a>
-					</div>
-				</div>
-			</div>
+		<div class="buttons-start" ng-show="jsonStart"></div>
 
-		</div>
+		<!-- GESTION CONSTRUCTION JSON -->
+		<div class="json-builder" ng-show="!jsonStart"></div>
 		
 
 		<!-- AFFICHAGE FICHIER -->
-		<div class="card" ng-show="file.content.length>0">
-			<h3>Fichier : <span ng-bind="file.name"></span></h3>
-			<p ng-bind="file.content"></p>
-			<a
-				ng-click="file.content=''"
-				class="button button-full button-light">
-				CLOSE FILE
-			</a>
-			<a
-				class="button button-full button-assertive"
-				ng-click="sendByMail( file.name, file.content )">
-				SEND BY MAIL
-			</a>
-			<a
-				class="button button-full button-assertive"
-				ng-click="copyToClipboard( file.content )">
-				COPY TO CLIPBOARD
-			</a>
-		</div>
+		<div class="file-admin" ng-show="file.content.length>0"></div>
 		
 
-		<!-- JSON DEBUG -->
-		<div class="card debug" ng-show="!jsonStart">
-			<h3>APERÇU JSON</h3>
-			<p ng-cloak>{{ json }}</p>
-		</div>
+		<!-- APPERÇU JSON -->
+		<div class="json-display" ng-show="!jsonStart"></div>
 <!-- 
 		<div class="card">
 			<a
@@ -111,13 +23,12 @@
 			</a>
 		</div> -->
 
-
 	</ion-content>
 
 	<ion-footer-bar>
 		<div class="button-bar">
 			<a
-				class="button button-ligth"
+				class="button button-light"
 				ui-sref="home"
 				ui-sref-opts="{reload:true}">
 				<span class="refresh-icon"></span>

@@ -9886,15 +9886,17 @@ body, ion-view, ion-content, ion-nav-view, .card {
 ion-footer-bar {
   height: 60px !important; }
 
+.bloc-bts-array-object {
+  position: relative;
+  top: 90px; }
+
 .bts-array-object, .array-icon, .object-icon {
   -webkit-animation: dwapsPulse 3s ease 0s infinite normal;
   -khtml-animation: dwapsPulse 3s ease 0s infinite normal;
   -moz-animation: dwapsPulse 3s ease 0s infinite normal;
   -ms-animation: dwapsPulse 3s ease 0s infinite normal;
   -o-animation: dwapsPulse 3s ease 0s infinite normal;
-  animation: dwapsPulse 3s ease 0s infinite normal;
-  position: relative;
-  top: 90px; }
+  animation: dwapsPulse 3s ease 0s infinite normal; }
 
 .array-icon {
   background: url("../img/array.png") center no-repeat;

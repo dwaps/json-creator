@@ -255,6 +255,8 @@ function homeCtrl(
 
     $scope.recupFile = function( fn )
     {
+    	$rootScope.showLogo = false;
+    	$scope.jsonStart = false;
     	$scope.file.name = fn;
     	dwapsLog.show("Fichier affiché :");
     	dwapsLog.show($scope.fn);
@@ -284,11 +286,11 @@ function homeCtrl(
 			$scope.popup = $ionicPopup.show(
 				{
 					template: '<input type="text" ng-model="file.name">',
-					title: 'Nom du fichier',
-					subTitle: '(sans l\'extension)',
+					title: 'Name of file',
+					subTitle: '(without extension)',
 					scope: $scope,
 					buttons: [
-						{ text: 'Annuler' },
+						{ text: 'Cancel' },
 						{
 							text: '<b>OK</b>',
 							type: 'button-positive',
@@ -310,7 +312,7 @@ function homeCtrl(
 										{{ f }}.json\
 									</ion-item>\
 								</ion-list>',
-					title: 'Choisir un fichier',
+					title: 'Choose a file',
 					scope: $scope
 				}
 			);
@@ -361,8 +363,8 @@ function homeCtrl(
 				'file://img/logo.gif'
 			],
 			subject: 'DWAPS Formation : JSONCreator',
-			body: '<p>Bonjour,\
-					<br><br>Voici le contenu de votre fichier json :</p>\
+			body: '<p>Hello,\
+					<br><br>Here is your content\'s json file :</p>\
 					<strong>' + fc + '</strong>\
 					<p><a href="http://dwaps.fr">DWAPS Formation - Michael Cornillon</a></p>',
 			isHtml: true

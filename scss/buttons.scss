@@ -11,11 +11,14 @@
 
 
 // BTS PAGE ACCUEIL
+.bloc-bts-array-object
+{
+	position: relative;
+    top: 90px;
+}
 .bts-array-object
 {
 	@include animation(dwapsPulse 3s ease 0s infinite normal);
-	position: relative;
-    top: 90px;
 }
 
 .array-icon {
