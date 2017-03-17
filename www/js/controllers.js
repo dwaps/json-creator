@@ -57,7 +57,7 @@ function homeCtrl(
 
     $scope.setTypeAndData = function( data, type, endArray )
     {
-    	var tmp = "";
+    	var tmp = "", doubleProp = false;
     	$rootScope.showLogo = false;
 
         if( $scope.jsonStart ) // 1er appel à la fonction : initialisation de l'objet JSON
@@ -79,21 +79,41 @@ function homeCtrl(
         		$scope.currentType = type;
         		$scope.currentProp = $filter("slugify")(data, data);
 
-        		tmp = '{"'+$scope.currentProp+'":""}';
-        		var toJson = JSON.parse(tmp);
+        		// Vérification de l'unicité de la propriété
+        		$rootScope.json.forEach(
+        			function(o)
+        			{
+        				for( var p in o)
+        				{
+        					if( p == $scope.currentProp)
+        					{
+        						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
+			        			$scope.dataType = $rootScope.type.PROPRIETE;
+        						doubleProp = true;
+        					}
+        				}
+        			}
+        		);
+        		if(!doubleProp)
+        		{
+	        		tmp = '{"'+$scope.currentProp+'":""}';
+	        		var toJson = JSON.parse(tmp);
 
-				if(isRootArray) $rootScope.json.push(toJson);
-				else
-				{
-					if(Object.keys($rootScope.json).length === 0)
-						$rootScope.json = toJson;
+					if(isRootArray) $rootScope.json.push(toJson);
 					else
-						$rootScope.json[$scope.currentProp] = "";
-				}
-				// else
-				// 	if($rootScope.json == {}) $rootScope.json = toJson;
-				// 	else $rootScope.json += toJson;
-    			$scope.dataType = $rootScope.type.VALEUR; // Prochaine donnée => valeur
+					{
+						if(Object.keys($rootScope.json).length === 0)
+							$rootScope.json = toJson;
+						else
+							$rootScope.json[$scope.currentProp] = "";
+					}
+					// else
+					// 	if($rootScope.json == {}) $rootScope.json = toJson;
+					// 	else $rootScope.json += toJson;
+	    			$scope.dataType = $rootScope.type.VALEUR; // Prochaine donnée => valeur
+        		}
+        		else
+        			return;
         	}
 
         	// SAISIE VALEUR
