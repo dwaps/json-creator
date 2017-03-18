@@ -29,6 +29,7 @@ function homeCtrl(
 		$cordovaEmailComposer,
 		$cordovaClipboard,
 		fileProvider,
+		jsonProvider,
 		dwapsLog,
 		dwapsToast,
 		INVIT_CONTACT,
@@ -58,25 +59,6 @@ function homeCtrl(
 	$scope.endObject = true;
 	$scope.cptEndObject = 0; // Compteur provisoire pour la gestion de la fin d'un objet
 
-	$scope.adminObject = function( obj, value )
-	{
-		for( var p in obj)
-		{
-			if(angular.equals(obj[p], {}) && !value)
-			{
-				obj[p] = JSON.parse('{"'+$scope.currentProp+'":{}}');
-				break;
-			}
-			else if(angular.equals(obj[p], {}) && value)
-			{
-				obj[p] = value;
-			}
-			else
-			{
-				$scope.adminObject( obj[p], value ); // Récursion
-			}
-		}
-	};
 
     $scope.setTypeAndData = function( data, type, endArray )
     {
@@ -103,20 +85,23 @@ function homeCtrl(
         		$scope.currentProp = $filter("slugify")(data, data);
 
         		// Vérification de l'unicité de la propriété
-        		// $rootScope.json.forEach(
-        		// 	function(o)
-        		// 	{
-        		// 		for( var p in o)
-        		// 		{
-        		// 			if( p == $scope.currentProp)
-        		// 			{
-        		// 				dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
-			    //  			$scope.dataType = $rootScope.type.PROPRIETE;
-        		// 				doubleProp = true;
-        		// 			}
-        		// 		}
-        		// 	}
-        		// );
+        		if($scope.endObject)
+        		{
+	        		$rootScope.json.forEach(
+	        			function(o)
+	        			{
+	        				for( var p in o)
+	        				{
+	        					if( p == $scope.currentProp)
+	        					{
+	        						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
+				     			$scope.dataType = $rootScope.type.PROPRIETE;
+	        						doubleProp = true;
+	        					}
+	        				}
+	        			}
+	        		);
+        		}
 
         		if(!doubleProp)
         		{
@@ -157,7 +142,7 @@ function homeCtrl(
 							}
 							else 
 							{
-								$scope.adminObject( $rootScope.json[$rootScope.json.length-1] );
+								jsonProvider.adminObject( $rootScope.json[$rootScope.json.length-1], data );
 							}
 						}
 						else
@@ -233,12 +218,12 @@ function homeCtrl(
 			    		{
 			    			if($scope.cptEndObject == 0)
 			    			{
-			    				$scope.adminObject($rootScope.json[$rootScope.json.length-1]);
+			    				jsonProvider.adminObject($rootScope.json[$rootScope.json.length-1], data);
 			    				$scope.cptEndObject++;
 			    			}
 			    			else
 			    			{
-			    				$scope.adminObject($rootScope.json[$rootScope.json.length-1], data);
+			    				jsonProvider.adminObject($rootScope.json[$rootScope.json.length-1], null, data);
 			    				$scope.cptEndObject = 0;
 			    				$scope.endObject = true;
 			    			}
@@ -339,6 +324,8 @@ function homeCtrl(
     		dwapsLog.show(JSON.stringify($rootScope.json));
     		// dwapsLog.show($rootScope.json);
         }
+
+        console.log($rootScope.json);
     };
 
 

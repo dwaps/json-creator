@@ -11,8 +11,35 @@
 angular
 	.module('services', [])
 
+    .service('jsonProvider', jsonProvider)
 	.service('fileProvider', fileProvider)
 ;
+
+
+
+function jsonProvider()
+{
+    function adminObject( obj, prop, value )
+    {
+        for( var p in obj)
+        {
+            if(angular.equals(obj[p], {}) && prop)
+            {
+                obj[p] = JSON.parse('{"'+prop+'":{}}');
+                break;
+            }
+            else if(angular.equals(obj[p], {}) && value)
+            {
+                obj[p] = value;
+            }
+            else adminObject( obj[p], prop, value ); // Récursion
+        }
+    }
+
+    return {
+        adminObject: adminObject
+    };
+}
 
 function fileProvider(
 		$rootScope,
