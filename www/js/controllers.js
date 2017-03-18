@@ -57,10 +57,11 @@ function homeCtrl(
 	$scope.jsonStart = true;
 	$scope.endArray = true;
 	$scope.endObject = true;
-	$scope.cptEndObject = 0; // Compteur provisoire pour la gestion de la fin d'un objet
+	$scope.niveauObject = 0; // Retiens le niveau en cours d'édition
+	$scope.switchPropVal = true; // Gestion objet : true => propriété, false => valeur
 
 
-    $scope.setTypeAndData = function( data, type, endArray )
+    $scope.setTypeAndData = function( data, type, endArray, endObject )
     {
     	var tmp = "", doubleProp = false;
     	$rootScope.showLogo = false;
@@ -134,6 +135,15 @@ function homeCtrl(
         			}
         			else // Si le type est un objet, la prochaine saisie est une propriété
         			{
+						console.log(endObject);
+
+	    				if( endObject ) // Décide si on termine l'édition de l'objet
+    					{
+    						$scope.niveauObject = 0;
+    						$scope.endObject = true;
+    						return;
+    					}
+    					
 						if(isRootArray)
 						{							
 							if($scope.endObject) // 1er appel pour construire un objet
@@ -144,6 +154,7 @@ function homeCtrl(
 							{
 								jsonProvider.adminObject( $rootScope.json[$rootScope.json.length-1], data );
 							}
+							$scope.niveauObject++;
 						}
 						else
 						{
@@ -207,28 +218,58 @@ function homeCtrl(
 
 	        			break;
 
-	        		case $rootScope.type.OBJECT:
-	        			// $scope.setTypeAndData( data, type );
-	        			break;
-
 	        		case $rootScope.type.STRING:
+
+	    				if( endObject ) // Décide si on édite un objet imbriqué ou non
+    					{
+    						$scope.niveauObject = 0;
+    						$scope.endObject = true;
+    					}
+
 			    		// Si on sort d'un objet, la dernière valeur doit appartenir à la dernière propriété saisie
 			    		// avant de repasser à un nouveau couple propriété/valeur
-			    		if(!$scope.endObject)
+			    		if($scope.niveauObject > 0)
 			    		{
-			    			if($scope.cptEndObject == 0)
+			    			if($scope.switchPropVal) // Dernière propriété de l'objet
 			    			{
+			    				$scope.lastProp = $scope.currentProp;
 			    				jsonProvider.adminObject($rootScope.json[$rootScope.json.length-1], data);
-			    				$scope.cptEndObject++;
+			    				$scope.switchPropVal = false; // Prochaine saisie forcément une valeur pour la propriété de l'objet en cours
 			    			}
-			    			else
+			    			else // Dernière valeur de l'objet
 			    			{
-			    				jsonProvider.adminObject($rootScope.json[$rootScope.json.length-1], null, data);
-			    				$scope.cptEndObject = 0;
-			    				$scope.endObject = true;
-			    			}
+			    				// jsonProvider.adminObject($rootScope.json[$rootScope.json.length-1], null, data);
 
+			    				
+				    			if(isRootArray)
+				    			{
+		        					var o = $rootScope.json[$rootScope.json.length-1];
+		        					console.log("Niveau objet => " + $scope.niveauObject)
+		        					$rootScope.json.forEach(
+		        						function(o)
+		        						{
+		        							console.log("Objet concerné:")
+		        							console.log(o)
+
+		        							jsonProvider.cursorObject( o, $scope.lastProp, data );
+		        							console.log("Propriété actuelle => " + $scope.lastProp);
+		        						}
+		        					);
+				    			}
+				    			else // La racine JSON est un objet
+				    			{
+
+				    			}
+
+			    				$scope.switchPropVal = true; // Porchaine valeur forcément une nouvelle propriété de l'objet en cours
+
+			    				// $dataType = $rootScope.type.PROPRIETE;
+
+			    				console.log("Etat endObject => " + endObject)
+			    				console.log("Niveau objet actuel => " + $scope.niveauObject)
+			    			}
 			    		}
+
 			    		else
 			    		{
 		        			if( isRootArray ) // Si le JSON est un tableau d'objet
@@ -325,7 +366,7 @@ function homeCtrl(
     		// dwapsLog.show($rootScope.json);
         }
 
-        console.log($rootScope.json);
+        // console.log($rootScope.json);
     };
 
 

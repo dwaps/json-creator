@@ -25,19 +25,47 @@ function jsonProvider()
         {
             if(angular.equals(obj[p], {}) && prop)
             {
+                console.log("Affectation propriété : " + prop);
                 obj[p] = JSON.parse('{"'+prop+'":{}}');
                 break;
             }
             else if(angular.equals(obj[p], {}) && value)
             {
+                console.log("Affectation valeur : " + value);
                 obj[p] = value;
             }
             else adminObject( obj[p], prop, value ); // Récursion
         }
     }
 
+    var cpt = 0;
+
+    function cursorObject( o, lastProp, value )
+    {
+        cpt++;
+        if(cpt>10)
+        {
+            console.log("TROP DE RECURSIONS !!!");
+            return;
+        }
+
+        for( var p in o)
+        {
+            console.log(p)
+            if(p != lastProp)
+            {
+                cursorObject( o[p], lastProp );
+            }
+            else
+            {
+                adminObject( o[p], null, value );
+            }
+        }
+    }
+
     return {
-        adminObject: adminObject
+        adminObject: adminObject,
+        cursorObject: cursorObject
     };
 }
 

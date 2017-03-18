@@ -20,6 +20,12 @@
 				ng-click="setTypeAndData( dataInput, null, true )">
 				![]
 			</button>
+			<button
+				class="button button-assertive"
+				ng-show="!endObject"
+				ng-click="setTypeAndData( dataInput, type.OBJECT, null, true )">
+				!{}
+			</button>
 		</div>
 	</div>
 	
