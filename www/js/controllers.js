@@ -11,7 +11,8 @@
 /**
  * A FAIRE !!!
  * 
- * Pour le moment les valers des tableaux n'acceptent qu'un seul type (string)
+ * Pour le moment les valeurs des tableaux n'acceptent qu'un seul type (string)
+ * idem pour les objets
  */
 
 
@@ -47,12 +48,16 @@ function homeCtrl(
         VALEUR: "Valeur"
     };
 
-	$scope.dataType = $rootScope.type.PROPRIETE;
+	$scope.data = {
+		type: $rootScope.type.PROPRIETE,
+		input: ""
+	};
 	$scope.currentType = "";
 	$scope.currentProp = "";
 	$scope.lastProp = ""; // Pour la gestion des objets, permet d'ajouter la nouvelle propriété à l'ancienne
 
 	var isRootArray = true;
+	$scope.boolean = { state: false };
 	$scope.jsonStart = true;
 	$scope.endArray = true;
 	$scope.endObject = true;
@@ -93,6 +98,10 @@ function homeCtrl(
         		// Mise à jour du type de la valeur à venir : (array, boolean...)
         		$scope.currentType = type;
         		$scope.currentProp = $filter("slugify")(data, data);
+        		
+
+        		if( type == $rootScope.type.BOOLEAN ) 
+		        		$scope.data.input = "Switch to choose a value !";
 
         		// Vérification de l'unicité de la propriété
         		if($scope.endObject)
@@ -104,9 +113,11 @@ function homeCtrl(
 	        				{
 	        					if( p == $scope.currentProp)
 	        					{
-	        						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
-				     			$scope.dataType = $rootScope.type.PROPRIETE;
+				     				$scope.data.type = $rootScope.type.PROPRIETE;
+				     				$scope.data.input = "";
+        							$scope.currentType = "";
 	        						doubleProp = true;
+	        						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
 	        					}
 	        				}
 	        			}
@@ -139,7 +150,7 @@ function homeCtrl(
 		    				$scope.setTypeAndData( data, null, null ); // On rappelle la fonction sans le type pour intégrer la valeur àu dernier objet
 		    			}
 
-		    			$scope.dataType = $rootScope.type.VALEUR; // Prochaine donnée => valeur
+		    			$scope.data.type = $rootScope.type.VALEUR; // Prochaine donnée => valeur
 
         			}
         			else // Si le type est un objet, la prochaine saisie est une propriété
@@ -149,6 +160,8 @@ function homeCtrl(
     						$scope.niveauObject = 0;
     						$scope.endObject = true;
     						$scope.firstProp = true;
+    						// $scope.data.type == $rootScope.type.PROPRIETE;
+    						// $scope.showBtsBuilderJSON();
     						return;
     					}
 
@@ -177,7 +190,7 @@ function homeCtrl(
 						// else
 						// 	if($rootScope.json == {}) $rootScope.json = toJson;
 						// 	else $rootScope.json += toJson;
-		    			// $scope.dataType = $rootScope.type.VALEUR; // Prochaine donnée => valeur
+		    			// $scope.data.type = $rootScope.type.VALEUR; // Prochaine donnée => valeur
         			}
         		}
         		else
@@ -187,6 +200,8 @@ function homeCtrl(
         	// SAISIE VALEUR
         	else
         	{
+        		$scope.data.input = "";
+
 	        	switch( $scope.currentType )
 	        	{
 	        		case $rootScope.type.ARRAY:
@@ -222,7 +237,7 @@ function homeCtrl(
 
 			        	// Si l'utilisateur a fini de renseigner la valeur,
 			        	// il faut repasser en mode "saisir une nouvelle propriété"
-			        	if($scope.endArray) $scope.dataType = $rootScope.type.PROPRIETE;
+			        	if($scope.endArray) $scope.data.type = $rootScope.type.PROPRIETE;
 
 	        			break;
 
@@ -241,20 +256,19 @@ function homeCtrl(
 			    		{
 			    			if($scope.switchPropVal) // Dernière propriété parente de l'objet
 			    			{
-			    				console.log("Traitement propriété")
+			    				console.log("Traitement propriété en cours")
 			    				if($scope.firstProp)
 			    				{
 			    					// $scope.lastProp = $scope.currentProp; // On stocke la propriété parente du niveau traité
 			    					$scope.firstProp = false;
 			    				}
-			    				console.log("Propriété parente en cours => " + $scope.lastProp);
 			    				jsonProvider.adminObject($rootScope.json[$rootScope.json.length-1], $scope.lastProp, data);
 			    				$scope.childProp = data;
 			    				$scope.switchPropVal = false; // Prochaine saisie forcément une valeur pour la propriété de l'objet en cours
 			    			}
 			    			else // Dernière valeur de l'objet
 			    			{
-			    				console.log("Traitement propriété")
+			    				console.log("Traitement valeur en cours")
 			    				jsonProvider.adminObject($rootScope.json[$rootScope.json.length-1], $scope.lastProp, $scope.childProp, data);
 			    				$scope.switchPropVal = true; // Prochaine saisie forcément une nouvelle propriété pour la propriété de l'objet en cours
 
@@ -279,10 +293,7 @@ function homeCtrl(
 
 				    			// }
 
-			    				// $dataType = $rootScope.type.PROPRIETE;
-
-			    				console.log("Etat endObject => " + endObject)
-			    				console.log("Niveau objet actuel => " + $scope.niveauObject)
+			    				// $data.type = $rootScope.type.PROPRIETE;
 			    			}
 			    		}
 
@@ -313,7 +324,7 @@ function homeCtrl(
 
 				        	// Si l'utilisateur a fini de renseigner la valeur,
 				        	// il faut repasser en mode "saisir une nouvelle propriété"
-				        	$scope.dataType = $rootScope.type.PROPRIETE;
+				        	$scope.data.type = $rootScope.type.PROPRIETE;
 			    		}
 
 	        			break;
@@ -343,11 +354,13 @@ function homeCtrl(
 
 			        	// Si l'utilisateur a fini de renseigner la valeur,
 			        	// il faut repasser en mode "saisir une nouvelle propriété"
-			        	$scope.dataType = $rootScope.type.PROPRIETE;
+			        	$scope.data.type = $rootScope.type.PROPRIETE;
 
 	        			break;
 
 	        		case $rootScope.type.BOOLEAN:
+		        		console.log("Etat booléen => " + $scope.boolean.state)
+
 	        			if( isRootArray ) // Si le JSON est un tableau d'objet
 	        			{
 	        				$rootScope.json.forEach(
@@ -356,7 +369,7 @@ function homeCtrl(
         							for(var p in o )
         							{
         								if( p == $scope.currentProp )
-        									o[p] = data == "true";
+											o[p] = $scope.boolean.state;
         							}
 	        					}
 	        				);
@@ -366,17 +379,18 @@ function homeCtrl(
 							for(var p in $rootScope.json )
 							{
 								if( p == $scope.currentProp )
-									$rootScope.json[p] = data == "true";
+									o[p] = $scope.boolean.state;
 							}
 	        			}
 
 			        	// Si l'utilisateur a fini de renseigner la valeur,
 			        	// il faut repasser en mode "saisir une nouvelle propriété"
-			        	$scope.dataType = $rootScope.type.PROPRIETE;
+			        	$scope.data.type = $rootScope.type.PROPRIETE;
 
 	        			break;
-
 	        	}
+
+        		$scope.currentType = "";
         	}
 
     		dwapsLog.show(JSON.stringify($rootScope.json));
@@ -388,12 +402,12 @@ function homeCtrl(
 
     $scope.showBtSubmit = function()
     {
-    	return $scope.dataType == $rootScope.type.VALEUR && !$scope.switchPropVal;
+    	return $scope.data.type == $rootScope.type.VALEUR; // && !$scope.switchPropVal;
     };
 
     $scope.showBtsBuilderJSON = function()
     {
-    	return $scope.dataType==$rootScope.type.PROPRIETE | $scope.switchPropVal;
+    	return $scope.data.type == $rootScope.type.PROPRIETE; // | $scope.switchPropVal;
     };
 
 

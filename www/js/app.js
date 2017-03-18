@@ -19,7 +19,7 @@ angular
                     ])
 
     .constant( "CACHE_ACTIVED", false )
-    .constant( "LOG_ACTIVATED", true )
+    .constant( "LOG_ACTIVATED", false )
     .constant( "LIST_FILES_SAVED", "/.DWAPSFormation_listeFichiersJSON.txt" )
     .constant( "DIR_NAME", "JSONCreator" )
     .constant( "INVIT_CONTACT", "<p>Contactez le développeur</p>" )
@@ -73,7 +73,7 @@ function runner(
 
         $rootScope.json = null;
         $rootScope.listFilesSaved = [];
-        $rootScope.ecrasementFileList = false; // Au démarrage, on doit pas écraser ce fichier
+        $rootScope.ecrasementFileList = false; // Au démarrage, on doit pas écraser le fichier concerné
 
 
         // Création du fichier qui contiendra la liste de tous les fichiers sauvegardés

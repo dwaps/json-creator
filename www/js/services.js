@@ -21,49 +21,48 @@ angular
 
 function jsonProvider()
 {
-    function adminObject( obj, parentProp, childProp, value )
+    function adminObject( obj, parentProp, childProp, value, dwapsLog )
     {
         for( var p in obj)
         {
             if(angular.equals(obj[p], {}) && parentProp && parentProp != p)
             {
-                console.log("Affectation propriété parente : " + parentProp);
+                dwapsLog.show("Affectation propriété parente : " + parentProp);
                 obj[p] = JSON.parse('{"'+parentProp+'":{}}');
                 break;
             }
             else if(parentProp && childProp && !value && parentProp == p)
             {
-                console.log("Affectation nouvelle propriété : " + childProp);
+                dwapsLog.show("Affectation nouvelle propriété : " + childProp);
                 obj[parentProp][childProp] = "";
             }
             else if(parentProp && childProp && value && parentProp == p)
             {
-                console.log("Affectation valeur ("+value+") à propriété enfant " + childProp);                
+                dwapsLog.show("Affectation valeur ("+value+") à propriété enfant " + childProp);                
                 obj[parentProp][childProp] = value.replace(/^"(.*)"$/,"$1");
             }
             else if(angular.equals(obj[p], {}) && value)
             {
-                console.log("Affectation valeur : " + value);
+                dwapsLog.show("Affectation valeur : " + value);
                 obj[p] = value.replace(/^"(.*)"$/,"$1");
             }
             else adminObject( obj[p], parentProp, childProp, value ); // Récursion
         }
     }
 
-    var cpt = 0;
+    // var cpt = 0;
 
     function cursorObject( o, lastProp, value )
     {
-        cpt++;
-        if(cpt>10)
-        {
-            console.log("TROP DE RECURSIONS !!!");
-            return;
-        }
+        // cpt++;
+        // if(cpt>10)
+        // {
+        //     console.log("TROP DE RECURSIONS !!!");
+        //     return;
+        // }
 
         for( var p in o)
         {
-            console.log(p)
             if(p != lastProp)
             {
                 cursorObject( o[p], lastProp );

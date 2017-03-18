@@ -1,57 +1,72 @@
-<!-- NOM PROPRIETE | VALEUR -->
+<!-- INPUT / SUBMIT PROPRIETE | VALEUR -->
 <div class="list list-inset bts-submit">
 	<div class="item item-input">
 		<input
 			type="text"
-			ng-model="dataInput"
-			ng-focus="dataInput=''"
-			placeholder="{{ dataType }}">
+			ng-model="data.input"
+			ng-focus="data.input=''"
+			placeholder="{{ data.type }}"
+			ng-disabled="currentType == type.BOOLEAN">
 		<a
 			class="button button-balanced"
 			ng-show="showBtSubmit()"
-			ng-click="setTypeAndData( dataInput )">
+			ng-click="setTypeAndData( data.input )">
 			<span class="small-coche-icon"></span>
 		</a>
 		<a
 			class="button button-energized"
 			ng-show="!endArray"
-			ng-click="setTypeAndData( dataInput, null, true )">
+			ng-click="setTypeAndData( data.input, null, true )">
 			<span class="small-array-barre-icon"></span>
 		</a>
 		<a
 			class="button button-energized"
 			ng-show="!endObject"
-			ng-click="setTypeAndData( dataInput, type.OBJECT, null, true )">
+			ng-click="setTypeAndData( data.input, type.OBJECT, null, true )">
 			<span class="small-object-barre-icon"></span>
 		</a>
+		<label
+			class="toggle"
+			ng-show="currentType == type.BOOLEAN">
+			<input
+				type="checkbox"
+				ng-model="boolean.state"
+				ng-checked="boolean.state != boolean.state">
+			<div class="track">
+				<div class="handle"></div>
+			</div>
+		</label>
 	</div>
 </div>
 
-<!-- TYPE VALEUR -->
+<!-- COMPTEUR NIVEAU IMBRICATION OBJET -->
+<div class="niveau-objet" ng-cloak>{{ niveauObject }}</div>
+
+<!-- CHOIX TYPE VALEUR -->
 <div class="list" ng-show="showBtsBuilderJSON()">
 		<div class="row">
 			<a
-				ng-click="setTypeAndData( dataInput, type.ARRAY )"
+				ng-click="setTypeAndData( data.input, type.ARRAY )"
 				class="col button button-full button-positive">
 				<span class="small-array-icon"></span>
 			</a>
 			<a
-				ng-click="setTypeAndData( dataInput, type.OBJECT )"
+				ng-click="setTypeAndData( data.input, type.OBJECT )"
 				class="col button button-full button-royal">
 				<span class="small-object-icon"></span>
 			</a>
 			<a
-				ng-click="setTypeAndData( dataInput, type.STRING )"
+				ng-click="setTypeAndData( data.input, type.STRING )"
 				class="col button button-full button-energized">
 				<span class="small-string-icon"></span>
 			</a>
 			<a
-				ng-click="setTypeAndData( dataInput, type.INTEGER )"
+				ng-click="setTypeAndData( data.input, type.INTEGER )"
 				class="col button button-full button-balanced">
 				<span class="small-integer-icon"></span>
 			</a>
 			<a
-				ng-click="setTypeAndData( dataInput, type.BOOLEAN )"
+				ng-click="setTypeAndData( data.input, type.BOOLEAN )"
 				class="col button button-full button-assertive">
 				<span class="small-boolean-icon"></span>
 			</a>
