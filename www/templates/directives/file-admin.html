@@ -1,19 +1,17 @@
-<div class="card">
-	<h3>Fichier : <span ng-bind="file.name"></span></h3>
-	<p ng-bind="file.content"></p>
-	<a
-		ng-click="file.content=''"
-		class="button button-full button-light">
-		CLOSE FILE
-	</a>
-	<a
-		class="button button-full button-assertive"
-		ng-click="sendByMail( file.name, file.content )">
-		SEND BY MAIL
-	</a>
-	<a
-		class="button button-full button-assertive"
-		ng-click="copyToClipboard( file.content )">
-		COPY TO CLIPBOARD
-	</a>
-</div>	
+<h3>Fichier : <span ng-bind="file.name"></span></h3>
+<p ng-bind="file.content"></p>
+<a
+	ng-click="file.content=''"
+	class="button button-full button-light">
+	CLOSE FILE
+</a>
+<a
+	class="button button-full button-assertive"
+	ng-click="sendByMail( file.name, file.content )">
+	SEND BY MAIL
+</a>
+<a
+	class="button button-full button-assertive"
+	ng-click="copyToClipboard( file.content )">
+	COPY TO CLIPBOARD
+</a>

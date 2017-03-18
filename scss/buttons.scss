@@ -1,14 +1,33 @@
+// ------------------ //
+//   BOUTONS HEADER   //
+// ------------------ //
+
+ion-header-bar
+{
+	box-shadow: 0 4px 10px gray !important;
+	height: 60px !important;
+}
+
+
 @mixin bts( $url )
 {
 	background: url( $url ) center no-repeat;
 	background-size: contain;
-	width: 5em;
-	height: 5em;
-	margin: auto;
-	padding: 5px;
+	width: 6em;
+	height: 50px !important;
+	margin: 0 auto;
 	display: block;
 }
 
+.button
+{
+	height: 50px !important;
+}
+
+
+// ------------ //
+// PAGE ACCUEIL //
+// ------------ //
 
 // BTS PAGE ACCUEIL
 .bloc-bts-array-object
@@ -46,7 +65,7 @@
 	width: 40px;
 	margin-top: -5px;
 }
-// !
+
 
 @include keyframes(dwapsPulse) {
   0%  { @include transform(rotate(0deg) scale(1));   }
@@ -62,12 +81,48 @@
 }
 
 
-// BT JSON BUILDER
-.bloc-bts-json-builder
+
+
+// ----------------- //
+// PAGE JSON BUILDER //
+// ----------------- //
+
+// Bts submit
+.bts-submit
 {
+	padding: 0 !important;
+	margin: 0 !important;
+	margin-right: 4px !important;
+}
+.bts-submit a
+{
+	padding: 0 !important;
+	margin: 0 !important;
+	margin-right: 1px !important;
+}
+.small-coche-icon
+{
+	@include bts('../img/coche.png');
+	width: 2em !important;
+}
+.small-array-barre-icon
+{
+	@include bts('../img/array-barre.png');
+	width: 2em !important;
+}
+.small-object-barre-icon
+{
+	@include bts('../img/object-barre.png');
 	width: 2em !important;
 }
 
+// Bts values 
+.bloc-bts-json-builder
+{
+	width: 2em !important;
+	position: relative;
+	top: -4px;
+}
 .small-array-icon
 {
 	@include bts('../img/array.png');

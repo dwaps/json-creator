@@ -378,7 +378,7 @@ function homeCtrl(
         // console.log($rootScope.json);
     };
 
-    $scope.showBtValidateInput = function()
+    $scope.showBtSubmit = function()
     {
     	return $scope.dataType == $rootScope.type.VALEUR && !$scope.switchPropVal;
     };
@@ -464,7 +464,10 @@ function homeCtrl(
 									</ion-item>\
 								</ion-list>',
 					title: 'Choose a file',
-					scope: $scope
+					scope: $scope,
+					buttons: [
+						{ text: 'Cancel' }
+					]
 				}
 			);
 		}
@@ -480,14 +483,6 @@ function homeCtrl(
 					}
 				}
 			);
-
-		// $timeout(
-		// 	function()
-		// 	{
-		// 		popupCreateFile.close();
-		// 	},
-		// 	3000
-		// );
     };
 
 	$scope.sendByMail = function( fn, fc )

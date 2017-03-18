@@ -1,31 +1,6 @@
 <ion-view>
-	<ion-content>
-		
-		<!-- CHOIX RACINE TABLEAU / OBJET -->
-		<div class="buttons-start" ng-show="jsonStart"></div>
 
-		<!-- GESTION CONSTRUCTION JSON -->
-		<div class="json-builder" ng-show="!jsonStart"></div>
-		
-
-		<!-- AFFICHAGE FICHIER -->
-		<div class="file-admin" ng-show="file.content.length>0"></div>
-		
-
-		<!-- APPERÇU JSON -->
-		<div class="json-display" ng-show="!jsonStart"></div>
-<!-- 
-		<div class="card">
-			<a
-				class="button button-full button-assertive"
-				ng-click="clearFiles()">
-				REMOVE MAIN DIR
-			</a>
-		</div> -->
-
-	</ion-content>
-
-	<ion-footer-bar>
+	<ion-header-bar>
 		<div class="button-bar">
 			<a
 				class="button button-light"
@@ -46,5 +21,32 @@
 				<span class="open-file-icon"></span>
 			</a>
 		</div>
-	</ion-footer-bar>
+	</ion-header-bar>
+		
+	<ion-content has-bouncing="false">
+		
+		<!-- CHOIX RACINE TABLEAU / OBJET -->
+		<div class="buttons-start" ng-show="jsonStart"></div>
+
+		<!-- GESTION CONSTRUCTION JSON -->
+		<div class="card json-builder" ng-show="!jsonStart"></div>
+		
+
+		<!-- AFFICHAGE FICHIER -->
+		<div class="card file-admin" ng-show="file.content.length>0"></div>
+		
+
+		<!-- APPERÇU JSON -->
+		<div class="card json-display" ng-show="!jsonStart"></div>
+		
+		<!-- 
+		<div class="card">
+			<a
+				class="button button-full button-assertive"
+				ng-click="clearFiles()">
+				REMOVE MAIN DIR
+			</a>
+		</div> -->
+
+	</ion-content>
 </ion-view>
