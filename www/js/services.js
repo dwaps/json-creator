@@ -19,22 +19,32 @@ angular
 
 function jsonProvider()
 {
-    function adminObject( obj, prop, value )
+    function adminObject( obj, parentProp, childProp, value )
     {
         for( var p in obj)
         {
-            if(angular.equals(obj[p], {}) && prop)
+            if(angular.equals(obj[p], {}) && parentProp && parentProp != p)
             {
-                console.log("Affectation propriété : " + prop);
-                obj[p] = JSON.parse('{"'+prop+'":{}}');
+                console.log("Affectation propriété parente : " + parentProp);
+                obj[p] = JSON.parse('{"'+parentProp+'":{}}');
                 break;
+            }
+            else if(parentProp && childProp && !value && parentProp == p)
+            {
+                console.log("Affectation nouvelle propriété : " + childProp);
+                obj[parentProp][childProp] = "";
+            }
+            else if(parentProp && childProp && value && parentProp == p)
+            {
+                console.log("Affectation valeur ("+value+") à propriété enfant " + childProp);                
+                obj[parentProp][childProp] = value.replace(/^"(.*)"$/,"$1");
             }
             else if(angular.equals(obj[p], {}) && value)
             {
                 console.log("Affectation valeur : " + value);
-                obj[p] = value;
+                obj[p] = value.replace(/^"(.*)"$/,"$1");
             }
-            else adminObject( obj[p], prop, value ); // Récursion
+            else adminObject( obj[p], parentProp, childProp, value ); // Récursion
         }
     }
 
