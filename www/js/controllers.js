@@ -26,13 +26,12 @@ function homeCtrl(
 		$filter,
 		$timeout,
 		$ionicPopup,
-		$cordovaEmailComposer,
-		$cordovaClipboard,
-		fileProvider,
 		jsonProvider,
+		fileProvider,
+		emailProvider,
+		clipboardProvider,
 		dwapsLog,
 		dwapsToast,
-		INVIT_CONTACT,
 		DIR_NAME)
 {
     $rootScope.showLogo = true;
@@ -61,6 +60,15 @@ function homeCtrl(
 	$scope.switchPropVal = true; // Gestion objet : true => propriété, false => valeur
 	$scope.firstProp = true; // Si tratement 1ère propriété d'une liste de propriété d'un objet imbriqué
 
+	$scope.sendByMail = function( filename, filecontent )
+	{
+		emailProvider.send( filename, filecontent );
+	};
+
+	$scope.copyToClipboard = function( json )
+	{
+		clipboardProvider.copy( json );
+	};
 
     $scope.setTypeAndData = function( data, type, endArray, endObject )
     {
@@ -484,67 +492,4 @@ function homeCtrl(
 				}
 			);
     };
-
-	$scope.sendByMail = function( fn, fc )
-	{
-		dwapsLog.show("Envoi par mail en cours...");
-
-		var filePath = "file:///storage/emulated/0/" + DIR_NAME + "/" + fn + ".json";
-		console.log(filePath);
-		
-		$cordovaEmailComposer
-			.isAvailable()
-			.then(
-				function()
-				{
-				},
-				function()
-				{
-				}
-			);
-
-		var email = {
-			attachments: [
-				filePath,
-				'file://img/logo.gif'
-			],
-			subject: 'DWAPS Formation : JSONCreator',
-			body: '<p>Hello,\
-					<br><br>Here is your content\'s json file :</p>\
-					<strong>' + fc + '</strong>\
-					<p><a href="http://dwaps.fr">DWAPS Formation - Michael Cornillon</a></p>',
-			isHtml: true
-		};
-
-		$cordovaEmailComposer.open(email);
-	};
-
-	$scope.copyToClipboard = function( content )
-	{
-		dwapsLog.show("COPYING TO CLIPBOARD");
-
-		$cordovaClipboard
-			.copy( content )
-			.then(
-				function ()
-				{
-					dwapsLog.show("SUCCESS : TEXTE COPIED");
-				},
-				function ()
-				{
-					dwapsLog.show("ERROR : TEXTE NOT COPIED !");
-				}
-			);
-
-		$cordovaClipboard
-			.paste()
-			.then(
-				function ( result )
-				{
-				},
-				function ()
-				{
-				}
-			);
-	};
 }

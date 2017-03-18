@@ -12,7 +12,9 @@ angular
 	.module('services', [])
 
     .service('jsonProvider', jsonProvider)
-	.service('fileProvider', fileProvider)
+    .service('fileProvider', fileProvider)
+    .service('emailProvider', emailProvider)
+	.service('clipboardProvider', clipboardProvider)
 ;
 
 
@@ -297,5 +299,86 @@ function fileProvider(
     	createFile: createFile,
     	readFile: readFile,
     	clearFiles: clearFiles
+    };
+}
+
+function emailProvider( dwapsLog, dwapsToast, $cordovaEmailComposer, DIR_NAME, INVIT_CONTACT )
+{
+    function send( fn, fc )
+    {
+        var filePath = "file:///storage/emulated/0/" + DIR_NAME + "/" + fn + ".json";
+
+
+        $cordovaEmailComposer
+            .isAvailable()
+            .then(
+                function()
+                {
+                    dwapsLog.show("Envoi par mail en cours...");
+                    dwapsToast.show("<strong>Création email en cours...</strong>");
+
+                    var email = {
+                        attachments: [
+                            filePath,
+                            'file://img/logo.gif'
+                        ],
+                        subject: 'DWAPS Formation : JSONCreator',
+                        body: '<p>Hello,\
+                                <br><br>Here is your content\'s json file :</p>\
+                                <strong>' + fc + '</strong>\
+                                <p><a href="http://dwaps.fr">DWAPS Formation - Michael Cornillon</a></p>',
+                        isHtml: true
+                    };
+
+                    $cordovaEmailComposer.open( email );
+                },
+                function()
+                {
+                    dwapsLog.show("Impossible d'envoyer l'email !");
+                    dwapsToast.show("<h4>L'envoi n'a pas abouti</h4>" + INVIT_CONTACT);
+                }
+            );
+        
+    }
+
+    return {
+        send: send
+    };
+}
+
+function clipboardProvider( $cordovaClipboard, dwapsLog, dwapsToast )
+{
+    function copy( content )
+    {
+        dwapsLog.show("COPYING TO CLIPBOARD");
+
+        $cordovaClipboard
+            .copy( content )
+            .then(
+                function ()
+                {
+                    dwapsLog.show("SUCCESS : TEXTE COPIED");
+                    dwapsToast.show("<strong>JSON copié !</strong>");
+                },
+                function ()
+                {
+                    dwapsLog.show("ERROR : TEXTE NOT COPIED !");
+                }
+            );
+
+        // $cordovaClipboard
+        //     .paste()
+        //     .then(
+        //         function ( result )
+        //         {
+        //         },
+        //         function ()
+        //         {
+        //         }
+        //     );
+    };
+
+    return {
+        copy: copy
     };
 }
