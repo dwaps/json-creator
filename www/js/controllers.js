@@ -50,10 +50,33 @@ function homeCtrl(
 	$scope.dataType = $rootScope.type.PROPRIETE;
 	$scope.currentType = "";
 	$scope.currentProp = "";
+	$scope.lastProp = ""; // Pour la gestion des objets, permet d'ajouter la nouvelle propriété à l'ancienne
 
 	var isRootArray = true;
 	$scope.jsonStart = true;
 	$scope.endArray = true;
+	$scope.endObject = true;
+	$scope.cptEndObject = 0; // Compteur provisoire pour la gestion de la fin d'un objet
+
+	$scope.adminObject = function( obj, value )
+	{
+		for( var p in obj)
+		{
+			if(angular.equals(obj[p], {}) && !value)
+			{
+				obj[p] = JSON.parse('{"'+$scope.currentProp+'":{}}');
+				break;
+			}
+			else if(angular.equals(obj[p], {}) && value)
+			{
+				obj[p] = value;
+			}
+			else
+			{
+				$scope.adminObject( obj[p], value ); // Récursion
+			}
+		}
+	};
 
     $scope.setTypeAndData = function( data, type, endArray )
     {
@@ -71,7 +94,7 @@ function homeCtrl(
     			$rootScope.json = {};
         }
         else if(data) // Si les données sont renseignées
-        {
+        {        		
         	// SAISIE PROPRIETE
         	if( type ) // Si type est renseigné, la saisie est une propriété
         	{
@@ -80,37 +103,78 @@ function homeCtrl(
         		$scope.currentProp = $filter("slugify")(data, data);
 
         		// Vérification de l'unicité de la propriété
-        		$rootScope.json.forEach(
-        			function(o)
-        			{
-        				for( var p in o)
-        				{
-        					if( p == $scope.currentProp)
-        					{
-        						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
-			        			$scope.dataType = $rootScope.type.PROPRIETE;
-        						doubleProp = true;
-        					}
-        				}
-        			}
-        		);
+        		// $rootScope.json.forEach(
+        		// 	function(o)
+        		// 	{
+        		// 		for( var p in o)
+        		// 		{
+        		// 			if( p == $scope.currentProp)
+        		// 			{
+        		// 				dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
+			    //  			$scope.dataType = $rootScope.type.PROPRIETE;
+        		// 				doubleProp = true;
+        		// 			}
+        		// 		}
+        		// 	}
+        		// );
+
         		if(!doubleProp)
         		{
-	        		tmp = '{"'+$scope.currentProp+'":""}';
-	        		var toJson = JSON.parse(tmp);
+        			if(type != $rootScope.type.OBJECT) // La valeur désirée n'est pas un objet => array | int | bool | string
+        			{
+        				if($scope.endObject)
+        				{
+			        		tmp = '{"'+$scope.currentProp+'":""}';
+			        		var toJson = JSON.parse(tmp);
 
-					if(isRootArray) $rootScope.json.push(toJson);
-					else
-					{
-						if(Object.keys($rootScope.json).length === 0)
-							$rootScope.json = toJson;
+							if(isRootArray) $rootScope.json.push(toJson);
+							else
+							{
+								if(Object.keys($rootScope.json).length === 0)
+									$rootScope.json = toJson;
+								else
+									$rootScope.json[$scope.currentProp] = "";
+							}
+							// else
+							// 	if($rootScope.json == {}) $rootScope.json = toJson;
+							// 	else $rootScope.json += toJson;
+        				}
+		    			else
+		    			{
+		    				$scope.setTypeAndData( data, null, null ); // On rappelle la fonction sans le type pour intégrer la valeur àu dernier objet
+		    			}
+
+		    			$scope.dataType = $rootScope.type.VALEUR; // Prochaine donnée => valeur
+
+        			}
+        			else // Si le type est un objet, la prochaine saisie est une propriété
+        			{
+						if(isRootArray)
+						{							
+							if($scope.endObject) // 1er appel pour construire un objet
+							{
+								$rootScope.json.push(JSON.parse('{"'+$scope.currentProp+'":{}}'));
+							}
+							else 
+							{
+								$scope.adminObject( $rootScope.json[$rootScope.json.length-1] );
+							}
+						}
 						else
-							$rootScope.json[$scope.currentProp] = "";
-					}
-					// else
-					// 	if($rootScope.json == {}) $rootScope.json = toJson;
-					// 	else $rootScope.json += toJson;
-	    			$scope.dataType = $rootScope.type.VALEUR; // Prochaine donnée => valeur
+						{
+							if(Object.keys($rootScope.json).length === 0)
+								$rootScope.json = toJson;
+							else
+								$rootScope.json[$scope.currentProp] = "";
+						}
+						$scope.lastProp = $scope.currentProp;
+						$scope.endObject = false;
+						return;
+						// else
+						// 	if($rootScope.json == {}) $rootScope.json = toJson;
+						// 	else $rootScope.json += toJson;
+		    			// $scope.dataType = $rootScope.type.VALEUR; // Prochaine donnée => valeur
+        			}
         		}
         		else
         			return;
@@ -163,27 +227,47 @@ function homeCtrl(
 	        			break;
 
 	        		case $rootScope.type.STRING:
-	        			if( isRootArray ) // Si le JSON est un tableau d'objet
-	        			{
-	        				$rootScope.json.forEach(
-	        					function( o )
-	        					{
-        							for(var p in o )
-        							{
-        								if( p == $scope.currentProp )
-        									o[p] = data;
-        							}
-	        					}
-	        				);
-	        			}
-	        			else
-	        			{
-							for(var p in $rootScope.json )
-							{
-								if( p == $scope.currentProp )
-									$rootScope.json[p] = data;
-							}
-	        			}
+			    		// Si on sort d'un objet, la dernière valeur doit appartenir à la dernière propriété saisie
+			    		// avant de repasser à un nouveau couple propriété/valeur
+			    		if(!$scope.endObject)
+			    		{
+			    			if($scope.cptEndObject == 0)
+			    			{
+			    				$scope.adminObject($rootScope.json[$rootScope.json.length-1]);
+			    				$scope.cptEndObject++;
+			    			}
+			    			else
+			    			{
+			    				$scope.adminObject($rootScope.json[$rootScope.json.length-1], data);
+			    				$scope.cptEndObject = 0;
+			    				$scope.endObject = true;
+			    			}
+
+			    		}
+			    		else
+			    		{
+		        			if( isRootArray ) // Si le JSON est un tableau d'objet
+		        			{
+		        				$rootScope.json.forEach(
+		        					function( o )
+		        					{
+	        							for(var p in o )
+	        							{
+	        								if( p == $scope.currentProp )
+	        									o[p] = data;
+	        							}
+		        					}
+		        				);
+		        			}
+		        			else
+		        			{
+								for(var p in $rootScope.json )
+								{
+									if( p == $scope.currentProp )
+										$rootScope.json[p] = data;
+								}
+		        			}
+			    		}
 
 			        	// Si l'utilisateur a fini de renseigner la valeur,
 			        	// il faut repasser en mode "saisir une nouvelle propriété"
