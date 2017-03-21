@@ -39,7 +39,7 @@ function jsonProvider()
             else if(parentProp && childProp && value && parentProp == p)
             {
                 dwapsLog.show("Affectation valeur ("+value+") à propriété enfant " + childProp);                
-                obj[parentProp][childProp] = value.replace(/^"(.*)"$/,"$1");
+                obj[parentProp][childProp] = value.replace(/^""$/,"$1");
             }
             else if(angular.equals(obj[p], {}) && value)
             {
