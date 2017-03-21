@@ -14,12 +14,16 @@ angular
     .service('jsonProvider', jsonProvider)
     .service('fileProvider', fileProvider)
     .service('emailProvider', emailProvider)
-	.service('clipboardProvider', clipboardProvider)
+    .service('clipboardProvider', clipboardProvider)
+
+    .service( 'checkProvider', checkProvider )
+
+    .service('popupFactory', popupFactory)
 ;
 
 
 
-function jsonProvider()
+function jsonProvider( $rootScope, popupFactory )
 {
     function adminObject( obj, parentProp, childProp, value, dwapsLog )
     {
@@ -74,9 +78,42 @@ function jsonProvider()
         }
     }
 
+    function adminArray( isRootArray, imbricationNivel, data )
+    {
+        if( imbricationNivel == 0 ) // 1er appel pour construire un tableau
+        {
+            if( isRootArray )
+            {
+                $rootScope.json.push(JSON.parse('{"'+data+'":[]}'));
+
+                var popup = null;
+                var templateUrl = "templates/popup/type-choice.html",
+                    title = "Choose a type",
+                    subTitle = "";
+
+                $rootScope.fillArray = function( type )
+                {
+                    $rootScope.blockedType = type;
+                    if(popup) popup.close();
+                };
+
+                var popup = popupFactory(
+                    $rootScope,
+                    templateUrl,
+                    title,
+                    subTitle,
+                    null
+                );
+            }
+            else
+                $rootScope.json[data] = [];
+        }
+    }
+
     return {
         adminObject: adminObject,
-        cursorObject: cursorObject
+        cursorObject: cursorObject,
+        adminArray: adminArray
     };
 }
 
@@ -380,4 +417,70 @@ function clipboardProvider( $cordovaClipboard, dwapsLog, dwapsToast )
     return {
         copy: copy
     };
+}
+
+function checkProvider( $rootScope, dwapsToast )
+{
+    function isUnique( isRootArray, currentProp, type, input )
+    {
+        var retour = true;
+
+        if(isRootArray)
+        {
+            $rootScope.json.forEach(
+                function(o)
+                {
+                    for( var p in o)
+                    {
+                        if( p == currentProp)
+                        {
+                            $rootScope.currentType = "";
+                            type = $rootScope.type.PROPRIETE;
+                            dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
+                            input = "";
+                            retour = false;
+                        }
+                    }
+                }
+            );
+        }
+        else
+        {
+            for( var p in $rootScope.json)
+            {
+                if( p == currentProp)
+                {
+                    $rootScope.currentType = "";
+                    type = $rootScope.type.PROPRIETE;
+                    dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
+                    input = "";
+                    retour = false;
+                }
+            }
+        }
+
+        return retour;
+    }
+
+    return {
+        isUnique: isUnique
+    };
+}
+
+function popupFactory( $ionicPopup )
+{
+    return function openPopup( scope, templateUrl, title, subTitle, buttons )
+    {
+        popup = $ionicPopup.show(
+            {
+                templateUrl: templateUrl,
+                title: title,
+                subTitle: subTitle,
+                scope: scope,
+                buttons: buttons
+            }
+        );
+
+        return popup;
+    }
 }

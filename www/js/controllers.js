@@ -30,6 +30,7 @@ function homeCtrl(
 		jsonProvider,
 		fileProvider,
 		emailProvider,
+		checkProvider,
 		clipboardProvider,
 		dwapsLog,
 		dwapsToast,
@@ -52,7 +53,7 @@ function homeCtrl(
 		type: $rootScope.type.PROPRIETE,
 		input: ""
 	};
-	$scope.currentType = "";
+	$rootScope.currentType = "";
 	$scope.currentProp = "";
 	$scope.lastProp = ""; // Pour la gestion des objets, permet d'ajouter la nouvelle propriété à l'ancienne
 
@@ -64,6 +65,21 @@ function homeCtrl(
 	$scope.imbricationNivel = 0; // Retiens le niveau en cours d'édition
 	$scope.switchPropVal = true; // Gestion objet : true => propriété, false => valeur
 	$scope.firstProp = true; // Si tratement 1ère propriété d'une liste de propriété d'un objet imbriqué
+
+    $scope.showBtSubmit = function()
+    {
+    	return $scope.data.type == $rootScope.type.VALEUR; // && !$scope.switchPropVal;
+    };
+
+    $scope.showBtsBuilderJSON = function()
+    {
+    	return $scope.data.type == $rootScope.type.PROPRIETE; // | $scope.switchPropVal;
+    };
+
+    $scope.showBtEndArray = function()
+    {
+    	return !$scope.endArray && $scope.imbricationNivel > 0;
+    };
 
 	$scope.sendByMail = function( filename, filecontent )
 	{
@@ -79,16 +95,25 @@ function homeCtrl(
     {
 		$scope.data.input = "";
 
-		if( endArray || endObject )
-		{
-			$scope.endArray = true;
-			$scope.endObject = true;
-			$scope.data.type = $rootScope.type.PROPRIETE;
-			return;
-		}
-
     	var tmp = "", doubleProp = false;
     	if( $rootScope.showLogo ) $rootScope.showLogo = false;
+
+
+
+					// GESTION FIN TABLEAU OU OBJET
+					if( endArray || endObject )
+					{
+						$scope.imbricationNivel--;
+						if( $scope.imbricationNivel == 0 )
+						{
+							$scope.endArray = true;
+							$scope.endObject = true;
+						}
+						$scope.data.type = $rootScope.type.PROPRIETE;
+						$rootScope.currentType = "";
+						return;
+					}
+
 
         if( $scope.jsonStart ) // 1er appel à la fonction : initialisation de l'objet JSON
         {
@@ -102,103 +127,72 @@ function homeCtrl(
         }
         else if(data) // Si les données sont renseignées
         {
+        	data = data.replace(/""/,"");
+
         	// SAISIE PROPRIETE
-        	if( type && $scope.endArray && $scope.endObject ) // Si type est renseigné, la saisie est une propriété
+        	if( type ) // Si type est renseigné, la saisie est une propriété
         	{
-        		// Mise à jour du type de la valeur à venir : (array, boolean...)
-        		$scope.currentType = type;
+        		$rootScope.currentType = type;
         		$scope.currentProp = $filter("slugify")(data, data);
 
+        		// Vérification de l'unicité de la propriété
+        		if(
+        			!checkProvider.isUnique(
+	        			isRootArray,
+	        			$scope.currentProp,
+	        			$scope.data.type,
+	        			$scope.data.input
+	        	)) return;
+    			// !
+
+
+				// GESTION TABLEAU OU D'OBJET
+				if( !$scope.endArray || !$scope.endObject )
+				{
+					jsonProvider.adminArray( isRootArray, $scope.imbricationNivel, data );
+					return; // On va pas plus loin car la gestion se fait directement via le service dédié
+				}
+				// !
+
+    			// TYPE COURANT = ARRAY
+    			if(type == $rootScope.type.ARRAY )
+    			{
+    				jsonProvider.adminArray(
+    					isRootArray,
+    					$scope.imbricationNivel,
+    					$scope.currentProp
+    				);
+
+        			$scope.endArray = false;
+        			$scope.imbricationNivel++;
+        			$scope.data.type = $rootScope.type.VALEUR;
+					return;
+    			}
+    			// !
 
         		if( type == $rootScope.type.BOOLEAN ) 
 		        		$scope.data.input = "Switch to choose a value !";
 
-        		// Vérification de l'unicité de la propriété
-    			if(isRootArray)
+
+
+
+
+
+
+
+
+
+    			if(
+    				type != $rootScope.type.OBJECT
+    				&&
+    				type != $rootScope.type.ARRAY) // La valeur désirée n'est pas un objet => int | bool | string
     			{
-	        		$rootScope.json.forEach(
-	        			function(o)
-	        			{
-	        				for( var p in o)
-	        				{
-	        					if( p == $scope.currentProp)
-	        					{
-				     				$scope.data.type = $rootScope.type.PROPRIETE;
-				     				$scope.data.input = "";
-        							$scope.currentType = "";
-	        						doubleProp = true;
-	        						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
-	        					}
-	        				}
-	        			}
-	        		);
-    			}
-    			else
-    			{
-    				for( var p in $rootScope.json)
+    				if($scope.endObject && $scope.endArray)
     				{
-    					if( p == $scope.currentProp)
-    					{
-		     				$scope.data.type = $rootScope.type.PROPRIETE;
-		     				$scope.data.input = "";
-							$scope.currentType = "";
-    						doubleProp = true;
-    						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
-    					}
-    				}
-    			}
+		        		tmp = '{"'+$scope.currentProp+'":""}';
+		        		var toJson = JSON.parse(tmp);
 
-        		if(!doubleProp) // Si la propriété renseignée n'est pas un doublon
-        		{
-        			if(
-        				type != $rootScope.type.OBJECT
-        				&&
-        				type != $rootScope.type.ARRAY) // La valeur désirée n'est pas un objet => int | bool | string
-        			{
-        				if($scope.endObject && $scope.endArray)
-        				{
-			        		tmp = '{"'+$scope.currentProp+'":""}';
-			        		var toJson = JSON.parse(tmp);
-
-							if(isRootArray) $rootScope.json.push(toJson);
-							else
-							{
-								if(Object.keys($rootScope.json).length === 0)
-									$rootScope.json = toJson;
-								else
-									$rootScope.json[$scope.currentProp] = "";
-							}
-        				}
-		    			else
-		    			{
-		    				$scope.setTypeAndData( data, null, null ); // On rappelle la fonction sans le type pour intégrer la valeur àu dernier objet
-		    			}
-
-		    			$scope.data.type = $rootScope.type.VALEUR; // Prochaine donnée => valeur
-
-        			}
-        			else if(type == $rootScope.type.OBJECT ) // La prochaine saisie est forcément une propriété
-        			{
-	    				if( endObject ) // Décide si on termine l'édition de l'objet en cours
-    					{
-    						$scope.imbricationNivel = 0;
-    						$scope.endObject = true;
-    						$scope.firstProp = true;
-    						return;
-    					}
-
-						if(isRootArray)
-						{							
-							if($scope.endObject) // 1er appel pour construire un objet
-							{
-								$rootScope.json.push(JSON.parse('{"'+$scope.currentProp+'":{}}'));
-							}
-							else 
-							{
-								jsonProvider.adminObject( $rootScope.json[$rootScope.json.length-1], data );
-							}
-							$scope.imbricationNivel++;
-						}
+						if(isRootArray) $rootScope.json.push(toJson);
 						else
 						{
 							if(Object.keys($rootScope.json).length === 0)
@@ -206,51 +200,63 @@ function homeCtrl(
 							else
 								$rootScope.json[$scope.currentProp] = "";
 						}
-						$scope.lastProp = $scope.currentProp;
-						$scope.endObject = false;
-						return;
-						// else
-						// 	if($rootScope.json == {}) $rootScope.json = toJson;
-						// 	else $rootScope.json += toJson;
-		    			// $scope.data.type = $rootScope.type.VALEUR; // Prochaine donnée => valeur
-        			}
-        			else if(type == $rootScope.type.ARRAY ) // Les prochaines saisies sont toujours des valeurs !
-        			{
-						if(isRootArray)
-						{	
-							if($scope.endArray) // 1er appel pour construire un tableau
-							{
-								$rootScope.json.push(JSON.parse('{"'+$scope.currentProp+'":[]}'));
-							}
-						}
-						else
-						{
-							if($scope.endArray) // 1er appel pour construire un tableau
-							{
-								$rootScope.json[$scope.currentProp] = [];
-							}
-						}
+    				}
+	    			else
+	    			{
+	    				$scope.setTypeAndData( data, null, null ); // On rappelle la fonction sans le type pour intégrer la valeur àu dernier objet
+	    			}
 
-						$scope.endArray = false;
-						$scope.data.type = $rootScope.type.VALEUR;
+	    			$scope.data.type = $rootScope.type.VALEUR; // Prochaine donnée => valeur
+
+    			}
+    			else if(type == $rootScope.type.OBJECT ) // La prochaine saisie est forcément une propriété
+    			{
+    				if( endObject ) // Décide si on termine l'édition de l'objet en cours
+					{
+						$scope.imbricationNivel = 0;
+						$scope.endObject = true;
+						$scope.firstProp = true;
 						return;
-        			}
-        		}
-        		else
-        			return;
+					}
+
+					if(isRootArray)
+					{							
+						if($scope.endObject) // 1er appel pour construire un objet
+						{
+							$rootScope.json.push(JSON.parse('{"'+$scope.currentProp+'":{}}'));
+						}
+						else 
+						{
+							jsonProvider.adminObject( $rootScope.json[$rootScope.json.length-1], data );
+						}
+						$scope.imbricationNivel++;
+					}
+					else
+					{
+						if(Object.keys($rootScope.json).length === 0)
+							$rootScope.json = toJson;
+						else
+							$rootScope.json[$scope.currentProp] = "";
+					}
+					$scope.lastProp = $scope.currentProp;
+					$scope.endObject = false;
+					return;
+					// else
+					// 	if($rootScope.json == {}) $rootScope.json = toJson;
+					// 	else $rootScope.json += toJson;
+	    			// $scope.data.type = $rootScope.type.VALEUR; // Prochaine donnée => valeur
+    			}
         	}
 
         	// SAISIE VALEUR
         	else
         	{
-        		$scope.data.input = "";
-
         		if( !$scope.endArray ) 
-					$scope.currentType = $rootScope.type.ARRAY;
+					$rootScope.currentType = $rootScope.type.ARRAY;
         		else if( !$scope.endObject ) 
-					$scope.currentType = $rootScope.type.endObject;
+					$rootScope.currentType = $rootScope.type.endObject;
 
-	        	switch( $scope.currentType )
+	        	switch( $rootScope.currentType )
 	        	{
 	        		case $rootScope.type.ARRAY:
 	        			$scope.endArray = endArray;
@@ -438,7 +444,7 @@ function homeCtrl(
 	        			break;
 	        	}
 
-        		$scope.currentType = "";
+        		$rootScope.currentType = "";
         	}
 
     		dwapsLog.show(JSON.stringify($rootScope.json));
@@ -446,16 +452,6 @@ function homeCtrl(
         }
 
         // console.log($rootScope.json);
-    };
-
-    $scope.showBtSubmit = function()
-    {
-    	return $scope.data.type == $rootScope.type.VALEUR; // && !$scope.switchPropVal;
-    };
-
-    $scope.showBtsBuilderJSON = function()
-    {
-    	return $scope.data.type == $rootScope.type.PROPRIETE; // | $scope.switchPropVal;
     };
 
 
