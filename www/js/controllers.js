@@ -78,7 +78,7 @@ function homeCtrl(
     $scope.setTypeAndData = function( data, type, endArray, endObject )
     {
     	var tmp = "", doubleProp = false;
-    	$rootScope.showLogo = false;
+    	if( $rootScope.showLogo ) $rootScope.showLogo = false;
 
         if( $scope.jsonStart ) // 1er appel à la fonction : initialisation de l'objet JSON
         {
@@ -98,37 +98,57 @@ function homeCtrl(
         		// Mise à jour du type de la valeur à venir : (array, boolean...)
         		$scope.currentType = type;
         		$scope.currentProp = $filter("slugify")(data, data);
-        		
+
 
         		if( type == $rootScope.type.BOOLEAN ) 
 		        		$scope.data.input = "Switch to choose a value !";
 
         		// Vérification de l'unicité de la propriété
-        		if($scope.endObject)
+        		if( $scope.endObject && $scope.endArray )
         		{
-	        		$rootScope.json.forEach(
-	        			function(o)
-	        			{
-	        				for( var p in o)
-	        				{
-	        					if( p == $scope.currentProp)
-	        					{
-				     				$scope.data.type = $rootScope.type.PROPRIETE;
-				     				$scope.data.input = "";
-        							$scope.currentType = "";
-	        						doubleProp = true;
-	        						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
-	        					}
-	        				}
-	        			}
-	        		);
+        			if(isRootArray)
+        			{
+		        		$rootScope.json.forEach(
+		        			function(o)
+		        			{
+		        				for( var p in o)
+		        				{
+		        					if( p == $scope.currentProp)
+		        					{
+					     				$scope.data.type = $rootScope.type.PROPRIETE;
+					     				$scope.data.input = "";
+	        							$scope.currentType = "";
+		        						doubleProp = true;
+		        						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
+		        					}
+		        				}
+		        			}
+		        		);
+        			}
+        			else
+        			{
+        				for( var p in $rootScope.json)
+        				{
+        					if( p == $scope.currentProp)
+        					{
+			     				$scope.data.type = $rootScope.type.PROPRIETE;
+			     				$scope.data.input = "";
+    							$scope.currentType = "";
+        						doubleProp = true;
+        						dwapsToast.show("<h2>Désolé !</h2><p>Cette propriété existe déjà.");
+        					}
+        				}
+        			}
         		}
 
-        		if(!doubleProp)
+        		if(!doubleProp) // Si la propriété renseignée n'est pas un doublon
         		{
-        			if(type != $rootScope.type.OBJECT) // La valeur désirée n'est pas un objet => array | int | bool | string
+        			if(
+        				type != $rootScope.type.OBJECT
+        				&&
+        				type != $rootScope.type.ARRAY) // La valeur désirée n'est pas un objet => array | int | bool | string
         			{
-        				if($scope.endObject)
+        				if($scope.endObject && $scope.endArray)
         				{
 			        		tmp = '{"'+$scope.currentProp+'":""}';
 			        		var toJson = JSON.parse(tmp);
@@ -141,9 +161,6 @@ function homeCtrl(
 								else
 									$rootScope.json[$scope.currentProp] = "";
 							}
-							// else
-							// 	if($rootScope.json == {}) $rootScope.json = toJson;
-							// 	else $rootScope.json += toJson;
         				}
 		    			else
 		    			{
@@ -153,7 +170,7 @@ function homeCtrl(
 		    			$scope.data.type = $rootScope.type.VALEUR; // Prochaine donnée => valeur
 
         			}
-        			else // Si le type est un objet, la prochaine saisie est une propriété
+        			else if(type == $rootScope.type.OBJECT ) // La prochaine saisie est forcément une propriété
         			{
 	    				if( endObject ) // Décide si on termine l'édition de l'objet
     					{
@@ -379,7 +396,7 @@ function homeCtrl(
 							for(var p in $rootScope.json )
 							{
 								if( p == $scope.currentProp )
-									o[p] = $scope.boolean.state;
+									$rootScope.json[p] = $scope.boolean.state;
 							}
 	        			}
 
